@@ -1,9 +1,9 @@
 import { createContext, useContext } from "react";
 import { useState } from "react"
 
-const ppContext = createContext(null);
+const AppContext = createContext(null);
 
-export default function AppContext({ children }){
+export default function AppProvider({ children }){
      
     const [currentRole, setCurrentRole] = useState("");
     const [users, setUsers] = useState([]);
