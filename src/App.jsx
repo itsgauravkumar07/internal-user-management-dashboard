@@ -15,8 +15,8 @@ function App() {
 
         <Route path='/dashboard' element={<AppLayout />}>
           <Route index element={<Dashboard />} />
-          <Route path='/requests' element={<Request />} />
-          <Route path='/users' element={<Users />} />
+          <Route path="requests" element={<Request />} />
+          <Route path='users' element={<Users />} />
         </Route>
       </Routes>
     </div>

@@ -3,10 +3,10 @@ import { NavLink } from "react-router-dom"
 export default function Sidebar(){
 
     return(
-        <section className="flex flex-col min-h-screen bg-gray-300 w-fit px-5 py-2 gap-2">
-            <NavLink to="/dashbaord">Dashboard</NavLink>
-            <NavLink to="/dashbaord/users">Users</NavLink>
-            <NavLink to="/dashbaord/requests">Requests</NavLink>
+        <section className="flex flex-col min-h-screen bg-blue-300 w-fit px-5 py-5 gap-2">
+            <NavLink to="/dashboard">Dashboard</NavLink>
+            <NavLink to="/dashboard/users">Users</NavLink>
+            <NavLink to="/dashboard/requests">Requests</NavLink>
         </section>
     )
 }
