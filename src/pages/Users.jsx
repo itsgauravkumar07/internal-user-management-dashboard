@@ -2,7 +2,7 @@ import { useAppContext } from "../context/AppProvider";
 
 export default function Users(){
 
-    const { users } = useAppContext();
+    const { users, currentRole } = useAppContext();
 
     return(
         <section>
@@ -22,6 +22,12 @@ export default function Users(){
                     </li>
                     ))}
                 </ul>
+                {currentRole === "admin" 
+                    ? 
+                    <button className="px-3 py-1 bg-green-400 rounded">Add user</button>
+                    :
+                    <p>You have read-only access to users</p>
+                }
             </div>
             
            

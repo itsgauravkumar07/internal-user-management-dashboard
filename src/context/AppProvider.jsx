@@ -5,7 +5,7 @@ const AppContext = createContext(null);
 
 export default function AppProvider({ children }){
      
-    const [currentRole, setCurrentRole] = useState("");
+    const [currentRole, setCurrentRole] = useState("admin");
 
     const [users, setUsers] = useState([
     {
