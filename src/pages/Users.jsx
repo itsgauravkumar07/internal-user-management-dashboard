@@ -6,7 +6,10 @@ export default function Users(){
 
     return(
         <section>
-           
+            <header className="bg-blue-300 px-5 py-2">
+                <h1 className="text-2xl font-medium">Users</h1>
+                <p className="text-sm">Manage and view users in the system</p>
+            </header>
 
             <div className="mt-4 px-5">
                 <ul>
