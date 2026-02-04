@@ -11,17 +11,26 @@ export default function Users(){
                 <p className="text-sm">Manage and view users in the system</p>
             </header>
 
-            <div className="mt-4 px-5">
-                <ul>
-                    {users.map((user) => (
-                    <li 
-                        key={user.id}>
-                            {user.name} -
-                            {user.role} -
-                            {user.status}
-                    </li>
-                    ))}
-                </ul>
+            <div className="mt-4">
+                <table className="">
+                    <thead className="border ">
+                        <tr className="">
+                            <th className="border">Name</th>
+                            <th className="border">Role</th>
+                            <th>status</th>
+                        </tr>
+                    </thead>
+                    <tbody className="border">
+                        {users.map((user) => (
+                            <tr key={user.id}>
+                                <td className="border">{user.name}</td>
+                                <td className="border">{user.role}</td>
+                                <td className="border">{user.status}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+        
                 {currentRole === "admin" 
                     ? 
                     <button className="px-3 py-1 bg-green-400 rounded">Add user</button>
