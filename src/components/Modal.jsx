@@ -1,0 +1,16 @@
+
+export default function Modal({ isModal, onClose, children }) {
+    // if(!isModal) return;
+  return (
+    <div
+        
+        className="fixed top-0 left-0  min-h-screen backdrop-blur-md flex items-center justify-center w-full">
+            <div className="fixed bg-white border-2 h-100 w-100 m-auto rounded flex items-center justify-center flex-col">
+                <button 
+                    onClick={onClose}
+                    className="absolute top-4 right-6 bg-gray-100 px-3 py-1 rounded hover:bg-gray-200 hover:text-white">X</button>
+                {children}
+            </div>
+    </div>
+  );
+};
