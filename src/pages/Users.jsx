@@ -35,24 +35,30 @@ export default function Users(){
             </header>
 
             <div className="mt-4">
-                <table className="">
-                    <thead className="border ">
-                        <tr className="">
-                            <th className="border">Name</th>
-                            <th className="border">Role</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody className="border">
-                        {users.map((user) => (
-                            <tr key={user.id}>
-                                <td className="border px-5">{user.name}</td>
-                                <td className="border px-5">{user.role}</td>
-                                <td className="border px-5">{user.status}</td>
+                {users.length === 0 ? 
+                    <p>no users</p>
+                    : 
+                        <table className="">
+                        <thead className="border ">
+                            <tr className="">
+                                <th className="border">Name</th>
+                                <th className="border">Role</th>
+                                <th>Status</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="border">
+                            {users.map((user) => (
+                                <tr key={user.id}>
+                                    <td className="border px-5">{user.name}</td>
+                                    <td className="border px-5">{user.role}</td>
+                                    <td className="border px-5">{user.status}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    
+                }
+                
         
                 {currentRole === "admin" 
                     ? 
