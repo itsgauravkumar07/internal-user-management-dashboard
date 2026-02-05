@@ -14,7 +14,18 @@ export default function Users(){
         setIsModal(!isModal);
     }
 
-   
+    function handleAdd(e){
+        e.preventDefault();
+        const newValue = {
+                id: Date.now().toString(36),
+                name: name,
+                role: role,
+                status: status
+            };
+
+        setUsers([...users, newValue]);
+        OpenModel();
+    }
 
     return(
         <section className="">
@@ -62,7 +73,7 @@ export default function Users(){
                          <h1 className="mb-5 text-lg font-medium">Add Users form</h1>
                          
                         <form
-                            
+                            onSubmit={handleAdd} 
                             className="flex flex-col gap-2 ">
                             <div>
                                 <label className="text-sm">Name</label>
