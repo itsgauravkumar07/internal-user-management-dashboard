@@ -9,13 +9,39 @@ export default function Users(){
     const [name, setName] = useState('');
     const [role, setRole] = useState('');
     const [status, setStatus] = useState('');
+    const [errors, setErrors] = useState({});
 
     function OpenModel(){
         setIsModal(!isModal);
     }
 
+    
     function handleAdd(e){
+
         e.preventDefault();
+
+        let error = {};
+
+        console.log("clicked")
+
+        if(!name.trim()){
+            error.name = "Name required";
+        }
+
+        if(!role.trim()){
+            error.role = "Role Required";
+        }
+
+        if(!status.trim()){
+            error.status = "Status required";
+        }
+        
+
+        if(Object.keys(error).length > 0){
+            setErrors(error);
+            return;
+        }
+        
         const newValue = {
                 id: Date.now().toString(36),
                 name: name,
@@ -25,6 +51,10 @@ export default function Users(){
 
         setUsers([...users, newValue]);
         OpenModel();
+        setName("");
+        setRole("");
+        setStatus("");
+        setErrors({});
     }
 
     return(
@@ -89,6 +119,7 @@ export default function Users(){
                                     className="border rounded px-2 py-1 w-full"
                                     value={name}
                                     onChange={e => setName(e.target.value)} />
+                                    <p className="text-red-500 text-sm">{errors.name}</p>
                             </div>
                             
 
@@ -103,6 +134,7 @@ export default function Users(){
                                         <option value="Admin">Admin</option>
                                         <option value="Member">Member</option>
                                     </select>
+                                     <p className="text-red-500 text-sm">{errors.role}</p>
                                 </div>
 
                                 <div className="flex flex-col w-fit">
@@ -115,6 +147,7 @@ export default function Users(){
                                         <option value="Active">Active</option>
                                         <option value="Inactive">Inactive</option>
                                     </select>
+                                     <p className="text-red-500 text-sm">{errors.status}</p>
                                 </div>
                             </div>
 
