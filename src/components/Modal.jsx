@@ -1,5 +1,5 @@
 
-export default function Modal({ isModal, onClose, children }) {
+export default function Modal({ onClose, children }) {
     // if(!isModal) return;
   return (
     <div
