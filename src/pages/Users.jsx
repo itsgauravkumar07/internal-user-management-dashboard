@@ -110,6 +110,11 @@ export default function Users(){
         setErrors({});
     }
 
+    function handleDelete(id){
+        const updatedUser = users.filter(user => user.id !== id);
+        setUsers(updatedUser);
+    }
+
     return(
         <section className="">
             <header className="bg-blue-300 px-5 py-2">
@@ -146,6 +151,10 @@ export default function Users(){
                                                 <button 
                                                     className="hover:cursor-pointer"
                                                     onClick={() => editOpenModel(user.id)}>Edit</button>
+
+                                                <button 
+                                                    className="hover:cursor-pointer"
+                                                    onClick={() => handleDelete(user.id)}>Delete</button>
                                             </td>
                                         </tr>
                                     ))}
