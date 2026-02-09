@@ -132,8 +132,8 @@ export default function Users(){
                         ? 
                             <p>no users</p>
                         : 
-                            <table className="">
-                                <thead className="border ">
+                            <table>
+                                <thead className="border">
                                     <tr className="">
                                         <th className="border">Name</th>
                                         <th className="border">Role</th>

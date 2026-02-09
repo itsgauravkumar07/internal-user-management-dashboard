@@ -7,9 +7,40 @@ export default function AppProvider({ children }){
      
     const [currentRole, setCurrentRole] = useState("admin");
 
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState([
+        {
+            id: crypto.randomUUID(),
+            name: "Ram",
+            role: "Admin",
+            status: "Active"
+        },
+        {
+            id: crypto.randomUUID(),
+            name: "Adrash",
+            role: "Member",
+            status: "Active"
+        }
+    ]);
 
-    const [requests, setRequests] = useState([]);
+    const [requests, setRequests] = useState([
+        
+        {
+            id: crypto.randomUUID(),
+            userId: users[0]?.id,
+            type: "role_change",
+            requestedValue: "admin",
+            status: "pending",
+            createdAt: Date.now()
+        },
+        {
+            id: crypto.randomUUID(),
+            userId: users[1]?.id,
+            type: "role_change",
+            requestedValue: "admin",
+            status: "pending",
+            createdAt: Date.now()
+        }
+    ]);
 
     return(
         <AppContext.Provider 
