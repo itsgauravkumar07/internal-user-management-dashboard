@@ -1,8 +1,22 @@
+import { useAppContext } from '../context/AppProvider';
+
 export default function Request(){
+
+    const { request, setRequest, currentRole } = useAppContext();
 
     return(
         <div>
-            <h1>Your are in Request page</h1>
+            {
+                currentRole === "admin" 
+                ? 
+                <>
+                    <p>You are in admin page</p>
+                </>
+                : 
+                <>
+                    <p>You are in member page</p>
+                </>
+            }
         </div>
     )
 }
