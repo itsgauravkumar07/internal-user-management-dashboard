@@ -3,16 +3,18 @@ import { useAppContext } from "../context/AppProvider"
 
 export default function RoleSelect(){
 
-    const { setCurrentRole } = useAppContext();
+    const { setCurrentRole, setCurrentUserId, users } = useAppContext();
     const navigate = useNavigate();
 
     function setAdmin(){
         setCurrentRole("admin");
+        setCurrentUserId(users[1].id);
         navigate("/dashboard");
     }
 
     function setMember(){
         setCurrentRole("member");
+        setCurrentUserId(users[1].id);
         navigate("/dashboard")
     }
     return(
