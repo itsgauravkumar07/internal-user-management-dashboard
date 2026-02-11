@@ -3,8 +3,7 @@ import { useAppContext } from '../context/AppProvider';
 
 export default function Request(){
 
-    const { requests, setRequests, currentRole, users, currentUserId } = useAppContext();
-    const [stat, setStat] = useState("pending");
+    const { requests, setRequests, currentRole, users, currentUserId, setUsers } = useAppContext();
     const [reqType, setReqType] = useState('');
     const [roleChange, setRoleChange] = useState('');
     const [accessReq, setAccessReq] = useState('');
@@ -14,25 +13,63 @@ export default function Request(){
         e.preventDefault();
 
         const requestedValue = reqType === "role_change" ? roleChange : accessReq;
+        
         const reqObj = {
             id: crypto.randomUUID(),
             userId: currentUserId,
             type: reqType,
             requestedValue,
-            status: stat,
-            createdAt: Date.now()
+            createdAt: Date.now(),
+            status: "pending",
         }
         setRequests([...requests, reqObj]);
         setRoleChange("");
         setAccessReq("");
         setReqType("");
-
-        alert("Request submitted successfully");
     }
 
     const myRequests = requests.filter(
         (req) => req.userId === currentUserId
     );
+
+    function handleApprove(requestId){
+
+       const request = requests.find(r => r.id === requestId);
+
+       const updatedReq = requests.map(req =>
+        req.id === requestId 
+        ? {...req, status: "approved"}
+        : req
+       )
+       setRequests(updatedReq);
+
+       setUsers(prev => 
+        prev.map(user => {
+            if(user.id !== request.userId) return user;
+
+            if(request.type === "role_change"){
+                return {...user, role: request.requestedValue};
+            }
+
+            if(request.type === "access_change"){
+                return {...user, status: request.requestedValue};
+            }
+
+            return user;
+        })
+       )
+
+       setUsers(updatedUser);
+    }
+
+    function handleReject(requestId){
+        const updatedReq = requests.map(req => 
+            req.id === requestId
+            ? {...req, status: "reject"}
+            : req
+        )
+        setRequests(updatedReq);
+    }
 
     return(
         <div>
@@ -46,8 +83,10 @@ export default function Request(){
                                     <th className="border px-5">User</th>
                                     <th className="border px-5">type</th>
                                     <th className="border px-5">Value</th>
-                                    <th className="border px-5">Status</th>
                                     <th className="border px-5">Time</th>
+                                    <th className="border px-5">Status</th>
+                                    <th className="border px-5">Action</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -55,14 +94,21 @@ export default function Request(){
                                 {requests.map(req => {
                                     const user = users.find(u => u.id === req.userId);
                                     return(
-                                         <tr key={req.id}>
+                                        <tr key={req.id}>
                                         <td className="border px-5">
                                             {user ? user.name : "unknown user"}
                                         </td>
                                         <td className="border px-5">{req.type}</td>
                                         <td className="border px-5">{req.requestedValue}</td>
-                                        <td className="border px-5">{req.status}</td>
                                         <td className="border px-5">{new Date(req.createdAt).toLocaleDateString()}</td>
+                                        <td className="border px-5">{req.status}</td>
+                                        {req.status === "pending" && 
+                                        <td className='border px-5 flex'>
+                                            <button onClick={() => handleApprove(req.id, req.userId)} className='bg-green-500 px-3 py-1 rounded my-2 mx-2 font-medium hover:bg-green-600'>Approve</button>
+                                            <button onClick={() => handleReject(req.id)} className='bg-red-500 px-3 py-1 rounded my-2 mx-2 font-medium text-white hover:bg-red-600'>Reject</button>
+                                        </td>
+                                        }
+                                        
                                     </tr>
                                     )})}
                             </tbody>
@@ -126,8 +172,8 @@ export default function Request(){
                                     <th className="border px-5">User</th>
                                     <th className="border px-5">type</th>
                                     <th className="border px-5">Value</th>
-                                    <th className="border px-5">Status</th>
                                     <th className="border px-5">Time</th>
+                                    <th className="border px-5">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -143,8 +189,8 @@ export default function Request(){
                                         </td>
                                         <td className="border px-5">{req.type}</td>
                                         <td className="border px-5">{req.requestedValue}</td>
-                                        <td className="border px-5">{req.status}</td>
                                         <td className="border px-5">{req.createdAt}</td>
+                                        <td className="border px-5">{req.status}</td>
                                     </tr>
                                 )})}
                             </tbody>
