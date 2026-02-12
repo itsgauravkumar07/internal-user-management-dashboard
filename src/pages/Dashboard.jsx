@@ -10,7 +10,10 @@ export default function Dashboard(){
     const pendingReqCount = requests.filter((req) => req.status === "pending").length;
     
     const currentUser = users.find(u => u.id === currentUserId);
-
+    const totalRequests = requests.filter((u) =>u.userId === currentUserId);
+    const pendingRequests = totalRequests.filter(u => u.status === "pending").length;
+    // console.log(`here is your request ${currentUser.status}`);
+    
     return(
         <div>
             {currentRole === "admin" 
@@ -28,7 +31,8 @@ export default function Dashboard(){
                     <div>
                         <div>{`Your role is : ${currentUser?.role}`}</div>
                         <div>{`Your Current status is : ${currentUser?.status}`}</div>
-                        
+                        <div>{`Your Total pending : ${pendingRequests}`}</div>
+                        <div>{`Your Total request : ${totalRequests?.length}`}</div>
                     </div>
                 </>
             }
