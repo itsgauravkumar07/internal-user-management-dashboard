@@ -30,8 +30,8 @@ export default function RoleSelect(){
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-5xl mb-10">
                 {/* Card 01 */}
-                <div 
-                    className="border border-slate-400/20 px-8 py-5 rounded-2xl bg-slate-800/80 hover:border-blue-500/50"
+                <div  
+                    className="cursor-pointer border border-slate-400/20 px-8 py-5 rounded-2xl bg-slate-800/80 hover:border-blue-500/50"
                     onClick={setAdmin}>
                     <div className="bg-blue-800/20 w-fit rounded-2xl py-4 px-3 mb-5 ">
                         <MdOutlineSecurity className="h-10 w-10 text-blue-500/70"/>
@@ -44,7 +44,7 @@ export default function RoleSelect(){
 
                 {/* Card 02 */}
                 <div 
-                    className="border border-slate-400/20 px-8 py-5 rounded-2xl bg-slate-800/80 hover:border-blue-500/50"
+                    className="cursor-pointer border border-slate-400/20 px-8 py-5 rounded-2xl bg-slate-800/80 hover:border-blue-500/50"
                     onClick={setMember}>
                     <div className="bg-blue-800/20 w-fit rounded-2xl py-4 px-3 mb-5 ">
                         <MdOutlinePerson2 className="h-10 w-10 text-blue-500/70"/>
