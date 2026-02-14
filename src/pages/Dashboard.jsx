@@ -16,7 +16,7 @@ export default function Dashboard(){
     
     return(
         <div>
-            {currentRole === "admin" 
+            {currentRole === "Admin" 
             ? 
                 <>
                     <div>
