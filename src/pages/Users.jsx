@@ -152,26 +152,39 @@ export default function Users(){
                         ? 
                             <p>no users</p>
                         : 
-                            <Table 
-                                columns={columns}
-                                data={users}
-                                renderActions={(user) => (
-                                    <div className="flex items-center gap-2 justify-end">
-                                        <button 
-                                            onClick={() => editOpenModel(user.id)}
-                                            >
-                                                <MdOutlineEdit className="h-8 w-8 hover:text-blue-500 hover:cursor-pointer hover:bg-blue-500/30 px-2 py-2 rounded-lg"/>
-                                        </button>
 
-                                        <button 
-                                            className="hover:cursor-pointer"
-                                            onClick={() => handleDelete(user.id)}
-                                            >
-                                                <MdDeleteOutline className="h-8 w-8 hover:text-red-500 hover:cursor-pointer hover:bg-red-500/30 px-2 py-2 rounded-lg"/>
-                                        </button>
-                                    </div>
-                                )}
-                            />
+                        <div className="rounded-lg overflow-hidden">
+                            <table className="bg-slate-300/5 text-slate-300 rounded-lg table-fixed w-full">
+                                <thead className="bg-slate-800 text-sm text-left">
+                                    <tr>
+                                        <th className="w-1/2 p-4">Name</th>
+                                        <th className="w-1/4 p-4">Role</th>
+                                        <th className="w-1/4 p-4">Status</th>
+                                        <th className="w-1/4 p-4 text-end px-5">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="text-sm border border-white/10">
+                                    {users.map((user) => (
+                                        <tr key={user.id} className="border border-white/2">
+                                            <td className="py-8 px-5">{user.name}</td>
+                                            <td className="py-3 px-5">{user.role}</td>
+                                            <td className="py-3 px-5">{user.status}</td>
+                                            <td className="py-3 px-5 text-end">
+                                                <button 
+                                                    className="hover:cursor-pointer"
+                                                    onClick={() => editOpenModel(user.id)}>
+                                                         <MdOutlineEdit className="h-8 w-8 hover:text-blue-500 hover:cursor-pointer hover:bg-blue-500/30 px-2 py-2 rounded-lg"/></button>
+
+                                                <button 
+                                                    className="hover:cursor-pointer"
+                                                    onClick={() => handleDelete(user.id)}><MdDeleteOutline className="h-8 w-8 hover:text-red-500 hover:cursor-pointer hover:bg-blue-500/30 px-2 py-2 rounded-lg"/></button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                            
                         }
                     </>
                     
@@ -180,29 +193,30 @@ export default function Users(){
                         {users.length === 0 ? 
                     <p>no users</p>
                     : 
-                        <table className="">
-                        <thead className="border ">
-                            <tr className="">
-                                <th className="border">Name</th>
-                                <th className="border">Role</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody className="border">
-                            {users.map((user) => (
-                                <tr key={user.id}>
-                                    <td className="border px-5">{user.name}</td>
-                                    <td className="border px-5">{user.role}</td>
-                                    <td className="border px-5">{user.status}</td>
+                    <div className="rounded-lg overflow-hidden">
+                        <table className="bg-slate-300/5 text-slate-300 rounded-lg table-fixed w-full">
+                            <thead className="bg-slate-800 text-sm text-left ">
+                                <tr>
+                                    <th className="w-1/2 p-4">Name</th>
+                                    <th className="w-1/4 p-4">Role</th>
+                                    <th className="w-1/4 p-4 text-end">Status</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="text-sm border border-white/10">
+                                {users.map((user) => (
+                                    <tr key={user.id} className="border border-white/2">
+                                        <td className="py-8 px-5">{user.name}</td>
+                                        <td className="py-8 px-5">{user.role}</td>
+                                        <td className="px-5 text-end">{user.status}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                        
                     
                 }
-
-                <p>You have read-only access to users</p>
-                    </>
+                </>
                     
                 }
             </div>
