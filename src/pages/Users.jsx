@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAppContext } from "../context/AppProvider";
 import Modal from "../components/Modal";
+import { IoMdPersonAdd } from "react-icons/io";
 
 export default function Users(){
 
@@ -117,10 +118,21 @@ export default function Users(){
 
     return(
         <section className="">
-            <header className="bg-blue-300 px-5 py-2">
-                <h1 className="text-2xl font-medium">Users</h1>
-                <p className="text-sm">Manage and view users in the system</p>
-            </header>
+            <div className="flex justify-between items-center">
+                <HeaderSection 
+                    heading="Users"
+                    des="Manage system access, roles, and user account statuses."
+                />
+                <button 
+                    className="px-4 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700"
+                    onClick={() => addOpenModel()}>
+                        <div className="flex gap-2 items-center">
+                            <IoMdPersonAdd className="text-white w-5 h-5"/> Add user
+                        </div>
+                        
+                </button>
+            </div>
+           
 
             <div className="mt-4">
                 
@@ -132,22 +144,22 @@ export default function Users(){
                         ? 
                             <p>no users</p>
                         : 
-                            <table>
-                                <thead className="border">
-                                    <tr className="">
-                                        <th className="border">Name</th>
-                                        <th className="border">Role</th>
-                                        <th className="border">Status</th>
-                                        <th>Action</th>
+                            <table className="bg-slate-300/5 text-slate-300 rounded-lg table-fixed w-full">
+                                <thead className="bg-slate-800 text-sm text-left">
+                                    <tr>
+                                        <th className="w-1/2 p-4">Name</th>
+                                        <th className="w-1/4 p-4">Role</th>
+                                        <th className="w-1/4 p-4">Status</th>
+                                        <th className="w-1/4 p-4">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody className="border">
+                                <tbody className="text-sm border border-white/10">
                                     {users.map((user) => (
-                                        <tr key={user.id}>
-                                            <td className="border px-5">{user.name}</td>
-                                            <td className="border px-5">{user.role}</td>
-                                            <td className="border px-5">{user.status}</td>
-                                            <td className="border px-5">
+                                        <tr key={user.id} className="border border-white/2">
+                                            <td className="py-8 px-5">{user.name}</td>
+                                            <td className="py-3 px-5">{user.role}</td>
+                                            <td className="py-3 px-5">{user.status}</td>
+                                            <td className="py-3 px-5">
                                                 <button 
                                                     className="hover:cursor-pointer"
                                                     onClick={() => editOpenModel(user.id)}>Edit</button>
@@ -161,12 +173,6 @@ export default function Users(){
                                 </tbody>
                             </table>
                         }
-
-                        <button 
-                            className="px-3 mt-5 py-1 bg-green-400 rounded"
-                            onClick={() => addOpenModel()}>
-                                Add user
-                        </button>
                     </>
                     
                     :
@@ -280,27 +286,27 @@ export default function Users(){
                             <div className="flex justify-between">
                                 <div className="flex flex-col">
                                     <label className="text-sm">Role</label>
-                                    <select 
-                                        className="border rounded px-3 mt-2 py-1 w-fit"
-                                        value={role}
-                                        onChange={e => setRole(e.target.value)}>
-                                        <option>Select an Role</option>
-                                        <option value="Admin">Admin</option>
-                                        <option value="Member">Member</option>
-                                    </select>
+                                        <select 
+                                            className="border rounded px-3 mt-2 py-1 w-fit"
+                                            value={role}
+                                            onChange={e => setRole(e.target.value)}>
+                                            <option>Select an Role</option>
+                                            <option value="Admin">Admin</option>
+                                            <option value="Member">Member</option>
+                                        </select>
                                      <p className="text-red-500 text-sm">{errors.role}</p>
                                 </div>
 
                                 <div className="flex flex-col w-fit">
                                     <label className="text-sm">Status</label>
-                                    <select 
-                                        className="border rounded px-3 mt-2 py-1"
-                                        value={status}
-                                        onChange={e => setStatus(e.target.value)}>
-                                        <option>Select an Status</option>
-                                        <option value="Active">Active</option>
-                                        <option value="Inactive">Inactive</option>
-                                    </select>
+                                        <select 
+                                            className="border rounded px-3 mt-2 py-1"
+                                            value={status}
+                                            onChange={e => setStatus(e.target.value)}>
+                                            <option>Select an Status</option>
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
                                      <p className="text-red-500 text-sm">{errors.status}</p>
                                 </div>
                             </div>
@@ -308,17 +314,22 @@ export default function Users(){
                             <button className="mt-4 px-4 py-1 bg-green-400 rounded hover:bg-green-600 hover:text-white">Update</button>
                             
                         </form>
-                        </>
-                        }
-                         
-                         
-                        
-                    </div>
-                   
-            </Modal>
+                    </>
+                    }   
+                </div>
+                </Modal>
             }
-            
-           
         </section>
     )
 }
+
+
+function HeaderSection({heading, des}){
+    return(
+        <div className="">
+            <h1 className="text-2xl font-medium text-white">{heading}</h1>
+            <p className="text-slate-400 mt-2">{des}</p>
+        </div>
+    )
+}
+
