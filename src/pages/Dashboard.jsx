@@ -93,14 +93,27 @@ export default function Dashboard(){
 
 function Card({ icon: Icon, label, des }) {
   return (
-    <div
-      className="bg-slate-300/5 border border-slate-600/30 rounded-lg px-5 py-5 hover:bg-slate-300/10">
-      <Icon className="h-9 w-9 bg-blue-500/10 px-1 py-2 rounded-lg text-blue-500" />
-      <div className="font-medium mt-3 text-slate-400 text-sm">{label}</div>
-      <div className="font-bold text-white text-2xl">{des}</div>
+    <div className="group relative bg-slate-900 border border-white/10 rounded-xl p-6 transition-all duration-200 hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-500/5">
+
+      {/* Icon Wrapper */}
+      <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-blue-500/10 text-blue-400 group-hover:bg-blue-500/20 transition">
+        <Icon className="w-6 h-6" />
+      </div>
+
+      {/* Content */}
+      <div className="mt-5">
+        <p className="text-sm font-medium text-slate-400 tracking-wide">
+          {label}
+        </p>
+
+        <h3 className="mt-1 text-3xl font-semibold text-white tracking-tight">
+          {des}
+        </h3>
+      </div>
     </div>
   );
 }
+
 
 function HeaderSection({heading, des}){
     return(
