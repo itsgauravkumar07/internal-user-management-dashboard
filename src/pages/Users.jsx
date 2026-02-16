@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useAppContext } from "../context/AppProvider";
 import Modal from "../components/Modal";
 import { IoMdPersonAdd } from "react-icons/io";
+import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
+import Table from "../components/Table";
 
 export default function Users(){
 
@@ -116,6 +118,12 @@ export default function Users(){
         setUsers(updatedUser);
     }
 
+    const columns = [
+        { key: "name", label: "Name" },
+        { key: "role", label: "Role" },
+        { key: "status", label: "Status" },
+    ];
+
     return(
         <section className="">
             <div className="flex justify-between items-center">
@@ -144,34 +152,26 @@ export default function Users(){
                         ? 
                             <p>no users</p>
                         : 
-                            <table className="bg-slate-300/5 text-slate-300 rounded-lg table-fixed w-full">
-                                <thead className="bg-slate-800 text-sm text-left">
-                                    <tr>
-                                        <th className="w-1/2 p-4">Name</th>
-                                        <th className="w-1/4 p-4">Role</th>
-                                        <th className="w-1/4 p-4">Status</th>
-                                        <th className="w-1/4 p-4">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="text-sm border border-white/10">
-                                    {users.map((user) => (
-                                        <tr key={user.id} className="border border-white/2">
-                                            <td className="py-8 px-5">{user.name}</td>
-                                            <td className="py-3 px-5">{user.role}</td>
-                                            <td className="py-3 px-5">{user.status}</td>
-                                            <td className="py-3 px-5">
-                                                <button 
-                                                    className="hover:cursor-pointer"
-                                                    onClick={() => editOpenModel(user.id)}>Edit</button>
+                            <Table 
+                                columns={columns}
+                                data={users}
+                                renderActions={(user) => (
+                                    <div className="flex items-center gap-2 justify-end">
+                                        <button 
+                                            onClick={() => editOpenModel(user.id)}
+                                            >
+                                                <MdOutlineEdit className="h-8 w-8 hover:text-blue-500 hover:cursor-pointer hover:bg-blue-500/30 px-2 py-2 rounded-lg"/>
+                                        </button>
 
-                                                <button 
-                                                    className="hover:cursor-pointer"
-                                                    onClick={() => handleDelete(user.id)}>Delete</button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                        <button 
+                                            className="hover:cursor-pointer"
+                                            onClick={() => handleDelete(user.id)}
+                                            >
+                                                <MdDeleteOutline className="h-8 w-8 hover:text-red-500 hover:cursor-pointer hover:bg-red-500/30 px-2 py-2 rounded-lg"/>
+                                        </button>
+                                    </div>
+                                )}
+                            />
                         }
                     </>
                     
