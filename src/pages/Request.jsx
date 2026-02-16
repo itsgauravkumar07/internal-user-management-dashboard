@@ -78,136 +78,223 @@ export default function Request(){
     );
 
 
-    return(
-        <div>
-            {
-                currentRole === "admin" 
-                    ? 
-                    // Admin view 
-                        <>
-                            <table>
-                                <thead>
-                                    <tr className='border'>
-                                        <th className="border px-5">User</th>
-                                        <th className="border px-5">type</th>
-                                        <th className="border px-5">Value</th>
-                                        <th className="border px-5">Time</th>
-                                        <th className="border px-5">Status</th>
-                                        <th className="border px-5">Action</th>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                    {requests.map(req => {
-                                        const user = users.find(u => u.id === req.userId);
-                                        return(
-                                            <tr key={req.id}>
-                                            <td className="border px-5">
-                                                {user ? user.name : "unknown user"}
-                                            </td>
-                                            <td className="border px-5">{req.type}</td>
-                                            <td className="border px-5">{req.requestedValue}</td>
-                                            <td className="border px-5">{new Date(req.createdAt).toLocaleDateString()}</td>
-                                            <td className="border px-5">{req.status}</td>
-                                            {req.status === "pending" && 
-                                            <td className='border px-5 flex'>
-                                                <button onClick={() => handleApprove(req.id, req.userId)} className='bg-green-500 px-3 py-1 rounded my-2 mx-2 font-medium hover:bg-green-600'>Approve</button>
-                                                <button onClick={() => handleReject(req.id)} className='bg-red-500 px-3 py-1 rounded my-2 mx-2 font-medium text-white hover:bg-red-600'>Reject</button>
-                                            </td>
-                                            }
-                                            
-                                        </tr>
-                                        )})}
-                                </tbody>
-                            </table>
-                        </>
-                    : 
-                    //Member view
-                        <>
-                            <div className='bg-slate-100 py-5 px-5 border border-slate-300 rounded mb-10 w-80'>
-                                <h1 className='text-2xl font-medium'>Request form</h1>
-                                    <form 
-                                    onSubmit={handleSubmit} 
-                                    className='flex flex-col gap-2 mt-5'>
-                                    <label className='font-medium text-gray-700'>Request Type</label>
-                                    <select 
-                                        className=' border border-gray-300 w-full text-sm font-medium text-gray-800 px-2 py-1 rounded'
-                                        value={reqType}
-                                        onChange={e => setReqType(e.target.value)}>
-                                        <option value="">Select option</option>
-                                        <option value="role_change">Role change</option>
-                                        <option value="access_request">Access Request</option>
-                                    </select>
+   return (
+  <div className="p-6 text-slate-300 space-y-10">
 
-                                    {reqType === "role_change" 
-                                    ? 
-                                        <>
-                                            <label className='mt-2 font-medium text-gray-700'>Role change</label>
-                                            <select 
-                                                className=' border border-gray-300 w-full text-sm font-medium text-gray-800 px-2 py-1 rounded'
-                                                value={roleChange}
-                                                onChange={e => setRoleChange(e.target.value)}>
-                                                <option value="">Select option</option>
-                                                <option value="admin">Admin</option>
-                                                <option value="member">Member</option>
-                                            </select>
-                                            <button className='bg-blue-500 text-white py-1 rounded mt-3 font-medium hover:bg-blue-600'>Submit</button>
-                                        </>
-                                    : 
-                                        <>
-                                            <label className='mt-2 font-medium text-gray-700'>Access request</label>
-                                            <select 
-                                                className=' border border-gray-300 w-full text-sm font-medium text-gray-800 px-2 py-1 rounded'
-                                                value={accessReq}
-                                                onChange={e => setAccessReq(e.target.value)}>
-                                                <option value="">Select option</option>
-                                                <option value="active">Active</option>
-                                                <option value="inactive">Inactive</option>
-                                            </select>
-                                            <button className='bg-blue-500 text-white py-1 rounded mt-3 font-medium hover:bg-blue-600'>Submit</button>
-                                        </>
-                                    }
-                                </form>
-                            </div>
+    {/* ADMIN VIEW  */}
+    {currentRole === "admin" && (
+      <div className="bg-slate-900 rounded-xl border border-white/10 shadow-md overflow-hidden">
 
-                            
-                            {myRequests.length === 0 ? 
-                            <p>No request found</p>
-                            : 
-                            <table>
-                                <thead>
-                                    <tr className='border'>
-                                        <th className="border px-5">User</th>
-                                        <th className="border px-5">type</th>
-                                        <th className="border px-5">Value</th>
-                                        <th className="border px-5">Time</th>
-                                        <th className="border px-5">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                    {myRequests.map(req => {
-                                        
-                                        const user = users.find(u => u.id === req.userId);
-
-                                        return(
-                                            <tr key={req.id}>
-                                            <td className="border px-5">
-                                                {user ? user.name : "unknown user"}
-                                            </td>
-                                            <td className="border px-5">{req.type}</td>
-                                            <td className="border px-5">{req.requestedValue}</td>
-                                            <td className="border px-5">{req.createdAt}</td>
-                                            <td className="border px-5">{req.status}</td>
-                                        </tr>
-                                    )})}
-                                </tbody>
-                            </table>
-                            }
-                            
-                        </>
-            }
+        <div className="p-6 border-b border-white/10">
+          <h2 className="text-lg font-semibold">Access Requests</h2>
+          <p className="text-sm text-slate-400 mt-1">
+            Manage role and access change requests
+          </p>
         </div>
-    )
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-800 text-slate-400 uppercase text-xs">
+              <tr>
+                <th className="px-6 py-4 text-left">User</th>
+                <th className="px-6 py-4 text-left">Type</th>
+                <th className="px-6 py-4 text-left">Value</th>
+                <th className="px-6 py-4 text-left">Time</th>
+                <th className="px-6 py-4 text-right">Status</th>
+                <th className="px-6 py-4 text-right">Action</th>
+              </tr>
+            </thead>
+
+            <tbody className="divide-y divide-white/5">
+              {requests.map(req => {
+                const user = users.find(u => u.id === req.userId);
+
+                return (
+                  <tr key={req.id} className="hover:bg-slate-800/40 transition">
+                    <td className="px-6 py-4">
+                      {user ? user.name : "Unknown"}
+                    </td>
+
+                    <td className="px-6 py-4 capitalize">
+                      {req.type.replace("_", " ")}
+                    </td>
+
+                    <td className="px-6 py-4">
+                      {req.requestedValue}
+                    </td>
+
+                    <td className="px-6 py-4 text-slate-400">
+                      {new Date(req.createdAt).toLocaleDateString()}
+                    </td>
+
+                    <td className="px-6 py-4 text-right">
+                      <span
+                        className={`px-2 py-1 text-xs rounded-md font-medium ${
+                          req.status === "pending"
+                            ? "bg-yellow-500/20 text-yellow-400"
+                            : req.status === "approved"
+                            ? "bg-green-500/20 text-green-400"
+                            : "bg-red-500/20 text-red-400"
+                        }`}
+                      >
+                        {req.status}
+                      </span>
+                    </td>
+
+                    <td className="px-6 py-4 text-right">
+                      {req.status === "pending" && (
+                        <div className="flex justify-end gap-3">
+                          <button
+                            onClick={() =>
+                              handleApprove(req.id, req.userId)
+                            }
+                            className="px-3 py-1 text-xs font-medium rounded-md bg-green-500/20 text-green-400 hover:bg-green-500/30"
+                          >
+                            Approve
+                          </button>
+
+                          <button
+                            onClick={() => handleReject(req.id)}
+                            className="px-3 py-1 text-xs font-medium rounded-md bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    )}
+
+    {/* MEMBER VIEW */}
+    {currentRole !== "admin" && (
+      <>
+        {/* Request Form */}
+        <div className="bg-slate-900 rounded-xl border border-white/10 p-6 w-full max-w-md shadow-md">
+          <h2 className="text-lg font-semibold">Create Request</h2>
+
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4 mt-6"
+          >
+            <div>
+              <label className="text-sm text-slate-400">
+                Request Type
+              </label>
+              <select
+                className="w-full mt-1 bg-slate-800 border border-white/10 rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                value={reqType}
+                onChange={e => setReqType(e.target.value)}
+              >
+                <option value="">Select option</option>
+                <option value="role_change">Role change</option>
+                <option value="access_request">Access Request</option>
+              </select>
+            </div>
+
+            {reqType === "role_change" && (
+              <div>
+                <label className="text-sm text-slate-400">
+                  Role
+                </label>
+                <select
+                  className="w-full mt-1 bg-slate-800 border border-white/10 rounded-md px-3 py-2 text-sm"
+                  value={roleChange}
+                  onChange={e => setRoleChange(e.target.value)}
+                >
+                  <option value="">Select role</option>
+                  <option value="admin">Admin</option>
+                  <option value="member">Member</option>
+                </select>
+              </div>
+            )}
+
+            {reqType === "access_request" && (
+              <div>
+                <label className="text-sm text-slate-400">
+                  Access Status
+                </label>
+                <select
+                  className="w-full mt-1 bg-slate-800 border border-white/10 rounded-md px-3 py-2 text-sm"
+                  value={accessReq}
+                  onChange={e => setAccessReq(e.target.value)}
+                >
+                  <option value="">Select option</option>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            )}
+
+            <button className="mt-2 bg-blue-600 hover:bg-blue-700 transition rounded-md py-2 text-sm font-medium">
+              Submit Request
+            </button>
+          </form>
+        </div>
+
+        {/* My Requests Table */}
+        <div className="bg-slate-900 rounded-xl border border-white/10 shadow-md overflow-hidden">
+          <div className="p-6 border-b border-white/10">
+            <h2 className="text-lg font-semibold">
+              My Requests
+            </h2>
+          </div>
+
+          {myRequests.length === 0 ? (
+            <div className="p-6 text-sm text-slate-400">
+              No requests found.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-800 text-slate-400 uppercase text-xs">
+                  <tr>
+                    <th className="px-6 py-4 text-left">Type</th>
+                    <th className="px-6 py-4 text-left">Value</th>
+                    <th className="px-6 py-4 text-left">Time</th>
+                    <th className="px-6 py-4 text-right">Status</th>
+                  </tr>
+                </thead>
+
+                <tbody className="divide-y divide-white/5">
+                  {myRequests.map(req => (
+                    <tr key={req.id} className="hover:bg-slate-800/40">
+                      <td className="px-6 py-4 capitalize">
+                        {req.type.replace("_", " ")}
+                      </td>
+                      <td className="px-6 py-4">
+                        {req.requestedValue}
+                      </td>
+                      <td className="px-6 py-4 text-slate-400">
+                        {new Date(req.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <span
+                          className={`px-2 py-1 text-xs rounded-md font-medium ${
+                            req.status === "pending"
+                              ? "bg-yellow-500/20 text-yellow-400"
+                              : req.status === "approved"
+                              ? "bg-green-500/20 text-green-400"
+                              : "bg-red-500/20 text-red-400"
+                          }`}
+                        >
+                          {req.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </>
+    )}
+  </div>
+);
 }

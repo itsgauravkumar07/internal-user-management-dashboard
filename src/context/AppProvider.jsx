@@ -13,7 +13,7 @@ export default function AppProvider({ children }){
             id: crypto.randomUUID(),
             name: "Ram",
             role: "Member",
-            status: "Active"
+            status: "Inactive"
         },
         {
             id: crypto.randomUUID(),
