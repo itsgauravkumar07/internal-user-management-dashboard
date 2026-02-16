@@ -9,7 +9,7 @@ import { Routes, Route } from 'react-router-dom'
 function App() {
 
   return (
-    <div>
+    <div className="bg-gray-900">
       <Routes>
         <Route path='/' element={<RoleSelection />} />
 

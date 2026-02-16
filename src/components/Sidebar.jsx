@@ -6,7 +6,7 @@ import { LuGitPullRequestArrow } from "react-icons/lu";
 export default function Sidebar(){
 
     return(
-        <section className="flex flex-col min-h-screen bg-slate-800 w-70 py-5 gap-1 pl-4 pr-3">
+        <section className="border-r border-white/10 flex flex-col min-h-screen bg-gray-900 w-70 py-5 gap-1 pl-4 pr-3">
            
            <SidebarItem 
                 to="/dashboard" 
