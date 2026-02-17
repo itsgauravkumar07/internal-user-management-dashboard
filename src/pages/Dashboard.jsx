@@ -1,9 +1,9 @@
-
 import { useAppContext } from "../context/AppProvider";
+
+//Icons
 import { FiUsers } from "react-icons/fi";
 import { FaUserCheck } from "react-icons/fa";
-import { MdAdminPanelSettings } from "react-icons/md";
-import { MdOutlinePendingActions } from "react-icons/md";
+import { MdAdminPanelSettings,MdOutlinePendingActions } from "react-icons/md";
 import { BsPersonCheck } from "react-icons/bs";
 import { HiStatusOnline } from "react-icons/hi";
 import { AiOutlineFileDone } from "react-icons/ai";
@@ -13,10 +13,12 @@ export default function Dashboard(){
 
     const { users, requests, currentRole, currentUserId } = useAppContext();
     
+    //Admin summary card  logic
     const activeUsersCount = users.filter((user) => user.status === "Active").length;
     const adminCount = users.filter((user) => user.role === "admin").length;
     const pendingReqCount = requests.filter((req) => req.status === "pending").length;
     
+    //Member summary card logic
     const currentUser = users.find(u => u.id === currentUserId);
     const totalRequests = requests.filter((u) =>u.userId === currentUserId);
     const pendingRequests = totalRequests.filter(u => u.status === "pending").length;
@@ -28,6 +30,7 @@ export default function Dashboard(){
             {currentRole === "admin" 
             ? 
                 <>
+                    {/* Admin Dashboard View */}
                     <HeaderSection 
                         heading = "System Overview"
                         des = "Monitor real-time system performance and user activity."
@@ -58,6 +61,7 @@ export default function Dashboard(){
                 </>
             : 
                 <>
+                    {/* Member Dashboard View */}
                     <HeaderSection
                         heading="Your Stats Overview"
                         des="View your role, account status, and track your submitted access or role change requests."

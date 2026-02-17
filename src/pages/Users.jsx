@@ -13,7 +13,6 @@ export default function Users(){
     const [status, setStatus] = useState('');
     const [errors, setErrors] = useState({});
     const [mode, setMode] = useState("add");
-
     const [editingIdUserId, seteditingUserId] = useState(null);
 
     function addOpenModel(){
