@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { useState } from "react"
 
 const AppContext = createContext(null);
@@ -8,40 +8,52 @@ export default function AppProvider({ children }){
     const [currentRole, setCurrentRole] = useState("admin");
     const [currentUserId, setCurrentUserId] = useState(null);
 
-    const [users, setUsers] = useState([
-        {
-            id: crypto.randomUUID(),
-            name: "Ram",
-            role: "Member",
-            status: "Inactive"
-        },
-        {
-            id: crypto.randomUUID(),
-            name: "Adrash",
-            role: "Member",
-            status: "Active"
+    const [users, setUsers] = useState(() => {
+        const oldUsers = localStorage.getItem('users');
+        if(oldUsers){
+            return JSON.parse(oldUsers);
+        }else{
+             return [ 
+                {
+                    id: crypto.randomUUID(),
+                    name: "Ram",
+                    role: "Member",
+                    status: "Inactive"
+                },
+                {
+                    id: crypto.randomUUID(),
+                    name: "Adrash",
+                    role: "Member",
+                    status: "Active"
+                }];
         }
-    ]);
+    });
+
+    useEffect(() => {
+    localStorage.setItem('users', JSON.stringify(users))
+    }, [users]);
 
     const [requests, setRequests] = useState([
         
-        {
-            id: crypto.randomUUID(),
-            userId: users[0]?.id,
-            type: "role_change",
-            requestedValue: "admin",
-            status: "pending",
-            createdAt: Date.now()
-        },
-        {
-            id: crypto.randomUUID(),
-            userId: users[1]?.id,
-            type: "role_change",
-            requestedValue: "admin",
-            status: "pending",
-            createdAt: Date.now()
-        }
+    //     {
+    //         id: crypto.randomUUID(),
+    //         userId: users[0]?.id,
+    //         type: "role_change",
+    //         requestedValue: "admin",
+    //         status: "pending",
+    //         createdAt: Date.now()
+    //     },
+    //     {
+    //         id: crypto.randomUUID(),
+    //         userId: users[1]?.id,
+    //         type: "role_change",
+    //         requestedValue: "admin",
+    //         status: "pending",
+    //         createdAt: Date.now()
+    //     }
     ]);
+    
+   
 
     return(
         <AppContext.Provider 
