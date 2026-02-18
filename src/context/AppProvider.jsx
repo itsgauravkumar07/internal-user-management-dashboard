@@ -33,25 +33,34 @@ export default function AppProvider({ children }){
     localStorage.setItem('users', JSON.stringify(users))
     }, [users]);
 
-    const [requests, setRequests] = useState([
-        
-    //     {
-    //         id: crypto.randomUUID(),
-    //         userId: users[0]?.id,
-    //         type: "role_change",
-    //         requestedValue: "admin",
-    //         status: "pending",
-    //         createdAt: Date.now()
-    //     },
-    //     {
-    //         id: crypto.randomUUID(),
-    //         userId: users[1]?.id,
-    //         type: "role_change",
-    //         requestedValue: "admin",
-    //         status: "pending",
-    //         createdAt: Date.now()
-    //     }
-    ]);
+    const [requests, setRequests] = useState(() => {
+        const req = localStorage.getItem('req');
+        if(req){
+            return JSON.parse(req);
+        }else {
+            return [{
+                    id: crypto.randomUUID(),
+                    userId: users[0]?.id,
+                    type: "role_change",
+                    requestedValue: "admin",
+                    status: "pending",
+                    createdAt: Date.now()
+                },
+                {
+                    id: crypto.randomUUID(),
+                    userId: users[1]?.id,
+                    type: "role_change",
+                    requestedValue: "admin",
+                    status: "pending",
+                    createdAt: Date.now()
+                }];
+            }
+        }
+    );
+
+    useEffect(() => {
+        localStorage.setItem('req', JSON.stringify(requests))
+    }, [requests]);
     
    
 
