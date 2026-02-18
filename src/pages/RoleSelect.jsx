@@ -9,14 +9,20 @@ export default function RoleSelect(){
 
     function setAdmin(){
         setCurrentRole("admin");
-        setCurrentUserId(users[1].id);
-        navigate("/dashboard");
+        const user = users.find((u) => u.role === "Admin");
+        if(user){
+            setCurrentUserId(user.id);
+            navigate("/dashboard");
+        }
     }
 
     function setMember(){
         setCurrentRole("member");
-        setCurrentUserId(users[1].id);
-        navigate("/dashboard")
+        const user = users.find((u) => u.role === "Member");
+        if(user){
+            setCurrentUserId(user.id);
+            navigate("/dashboard");
+        }
     }
     return(
         <section  className="max-w-8xl flex justify-center items-center px-10 flex-col min-h-screen bg-slate-900">
