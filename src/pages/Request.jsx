@@ -19,10 +19,11 @@ export default function Request(){
       if(!reqType){
         error.reqType = "Select request type";
       }
-      if(!roleChange){
+      if(reqType === "role_change" && !roleChange){
         error.roleChange = "Select Role";
       }
-      if(!accessReq){
+
+      if(reqType === "access_request" && !accessReq){
         error.accessReq = "Select Access status"
       }
 
@@ -45,7 +46,7 @@ export default function Request(){
         setRoleChange("");
         setAccessReq("");
         setReqType("");
-        setErrors("");
+        setErrors({});
     }
 
     //Admin Approval
@@ -53,7 +54,7 @@ export default function Request(){
 
         //find the request that approved
        const request = requests.find(r => r.id === requestId);
-
+       if(!request) return;
        //Update the status of request: pending => Approved
        const updatedReq = requests.map(req =>
         req.id === requestId 
@@ -72,7 +73,7 @@ export default function Request(){
                 return {...user, role: request.requestedValue};
             }
 
-            if(request.type === "access_change"){
+            if(request.type === "access_request"){
                 return {...user, status: request.requestedValue};
             }
 
