@@ -7,11 +7,29 @@ export default function Request(){
     const [reqType, setReqType] = useState('');
     const [roleChange, setRoleChange] = useState('');
     const [accessReq, setAccessReq] = useState('');
+    const [errors, setErrors] = useState({});
 
     //Member submit
     function handleSubmit(e){
 
-        e.preventDefault();
+      e.preventDefault();
+
+      let error = {};
+
+      if(!reqType){
+        error.reqType = "Select request type";
+      }
+      if(!roleChange){
+        error.roleChange = "Select Role";
+      }
+      if(!accessReq){
+        error.accessReq = "Select Access status"
+      }
+
+      if(Object.keys(error).length > 0){
+        setErrors(error);
+        return;
+      }
 
         const requestedValue = reqType === "role_change" ? roleChange : accessReq;
         
@@ -27,6 +45,7 @@ export default function Request(){
         setRoleChange("");
         setAccessReq("");
         setReqType("");
+        setErrors("");
     }
 
     //Admin Approval
@@ -195,6 +214,8 @@ export default function Request(){
                 <option value="role_change">Role change</option>
                 <option value="access_request">Access Request</option>
               </select>
+              <p className="text-red-500 text-xs mt-1">{errors.reqType}</p>
+              
             </div>
 
             {reqType === "role_change" && (
@@ -211,6 +232,7 @@ export default function Request(){
                   <option value="admin">Admin</option>
                   <option value="member">Member</option>
                 </select>
+                <p className="text-red-500 text-xs mt-1">{errors.roleChange}</p>
               </div>
             )}
 
@@ -228,6 +250,7 @@ export default function Request(){
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>
+                <p className="text-red-500 text-xs mt-1">{errors.accessReq}</p>
               </div>
             )}
 
