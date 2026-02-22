@@ -99,7 +99,7 @@ export default function Request(){
 
 
    return (
-  <div className="p-6 text-slate-300 space-y-10">
+  <div className="p-4 md:p-6 text-slate-300 space-y-6 md:space-y-10">
 
     {/* ADMIN VIEW  */}
     {currentRole === "admin" && (
@@ -112,7 +112,8 @@ export default function Request(){
           </p>
         </div>
 
-        <div className="overflow-x-auto">
+        
+        <div className="overflow-x-auto hidden md:block">
           <table className="w-full text-sm">
             <thead className="bg-slate-800 text-slate-400 uppercase text-xs">
               <tr>
@@ -187,6 +188,66 @@ export default function Request(){
               })}
             </tbody>
           </table>
+        </div>
+
+              {/* MOBILE CARDS */}
+        <div className="md:hidden space-y-4 p-4">
+          {requests.map(req => {
+            const user = users.find(u => u.id === req.userId);
+
+            return (
+              <div
+                key={req.id}
+                className="bg-slate-800/40 border border-white/10 rounded-xl p-4 space-y-3"
+              >
+                <div className="flex justify-between items-center">
+                  <h3 className="text-white font-medium">
+                    {user ? user.name : "Unknown"}
+                  </h3>
+
+                  <StatusBadge status={req.status} />
+                </div>
+
+                <div className="text-sm text-slate-400">
+                  Type: <span className="text-slate-300 capitalize">
+                    {req.type.replace("_", " ")}
+                  </span>
+                </div>
+
+                <div className="text-sm text-slate-400">
+                  Value: <span className="text-slate-300">
+                    {req.requestedValue}
+                  </span>
+                </div>
+
+                <div className="text-sm text-slate-400">
+                  Date: <span className="text-slate-300">
+                    {new Date(req.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+
+                {req.status === "pending" && (
+                        <div className="flex justify-end gap-3">
+                          <button
+                            onClick={() =>
+                              handleApprove(req.id, req.userId)
+                            }
+                            className="px-3 py-1 text-xs font-medium rounded-md bg-green-500/20 text-green-400 hover:bg-green-500/30"
+                          >
+                            Approve
+                          </button>
+
+                          <button
+                            onClick={() => handleReject(req.id)}
+                            className="px-3 py-1 text-xs font-medium rounded-md bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      )}
+              </div>
+            );
+          })}
         </div>
       </div>
     )}
@@ -321,4 +382,20 @@ export default function Request(){
     )}
   </div>
 );
+}
+
+function StatusBadge({ status }) {
+  return (
+    <span
+      className={`px-2 py-1 text-xs rounded-md font-medium ${
+        status === "pending"
+          ? "bg-yellow-500/20 text-yellow-400"
+          : status === "approved"
+          ? "bg-green-500/20 text-green-400"
+          : "bg-red-500/20 text-red-400"
+      }`}
+    >
+      {status}
+    </span>
+  );
 }
