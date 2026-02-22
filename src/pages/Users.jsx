@@ -117,12 +117,12 @@ export default function Users(){
     }
 
    return (
-  <section className="p-6 text-slate-300 space-y-8">
+  <section className="p-4 md:p-6 text-slate-300 space-y-6 md:space-y-8">
 
     {/* USERS SECTION  */}
     <div className="bg-slate-900 border border-white/10 rounded-xl shadow-md overflow-hidden">
 
-      <div className="p-6 border-b border-white/10 flex justify-between items-center">
+      <div className="p-4 md:p-6 border-b border-white/10 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
         <HeaderSection
           heading="Users"
           des={
@@ -148,15 +148,17 @@ export default function Users(){
           No users found.
         </div>
       ) : (
-        <div className="overflow-x-auto">
+        <>
+        {/* DESKTOP TABLE (md and above) */}
+        <div className="overflow-x-auto hidden md:block">
           <table className="w-full text-sm">
             <thead className="bg-slate-800 text-slate-400 uppercase text-xs">
               <tr>
-                <th className="px-6 py-4 text-left">Name</th>
-                <th className="px-6 py-4 text-left">Role</th>
-                <th className="px-6 py-4 text-right">Status</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-left">Name</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-left">Role</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-right">Status</th>
                 {currentRole === "admin" && (
-                  <th className="px-6 py-4 text-right">Action</th>
+                  <th className="px-3 md:px-6 py-3 md:py-4 text-right">Action</th>
                 )}
               </tr>
             </thead>
@@ -203,13 +205,63 @@ export default function Users(){
             </tbody>
           </table>
         </div>
+        
+        {/* MOBILE CARDS */}
+        <div className="md:hidden space-y-4 p-4">
+              {users.map(user => (
+                <div
+                  key={user.id}
+                  className="bg-slate-800/40 border border-white/10 rounded-xl p-4 space-y-3"
+                >
+                  {/* Name */}
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-white font-medium">{user.name}</h3>
+
+                    <span
+                      className={`px-2 py-1 text-xs rounded-md font-medium ${
+                        user.status === "Active"
+                          ? "bg-green-500/20 text-green-400"
+                          : "bg-red-500/20 text-red-400"
+                      }`}
+                    >
+                      {user.status}
+                    </span>
+                  </div>
+
+                  {/* Role */}
+                  <div className="text-sm text-slate-400">
+                    Role: <span className="text-slate-300">{user.role}</span>
+                  </div>
+
+                  {/* Actions (Admin Only) */}
+                  {currentRole === "admin" && (
+                    <div className="flex justify-end gap-4 pt-2 border-t border-white/10">
+                      <button
+                        onClick={() => editOpenModel(user.id)}
+                        className="p-2 rounded-md hover:bg-blue-500/20 text-blue-400 transition"
+                      >
+                        <MdOutlineEdit className="w-5 h-5" />
+                      </button>
+
+                      <button
+                        onClick={() => handleDelete(user.id)}
+                        className="p-2 rounded-md hover:bg-red-500/20 text-red-400 transition"
+                      >
+                        <MdDeleteOutline className="w-5 h-5" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+          </div>
+        </>
       )}
     </div>
 
     {/* MODAL */}
     {isModal && (
       <Modal isModal={isModal} onClose={closeModel}>
-        <div className="bg-slate-900 text-slate-300 p-8 rounded-xl">
+        <div className="bg-slate-900 text-slate-300 p-5 md:p-8 rounded-xl w-full max-w-md">
 
           <h2 className="text-lg font-semibold mb-6">
             {mode === "add" ? "Add User" : "Edit User"}
@@ -233,7 +285,7 @@ export default function Users(){
             </div>
 
             {/* Role & Status */}
-            <div className="flex gap-4">
+            <div className="flex gap-4 flex-col md:flex-row">
               <div className="flex-1">
                 <label className="text-sm text-slate-400">Role</label>
                 <select
@@ -279,8 +331,8 @@ export default function Users(){
 function HeaderSection({heading, des}){
     return(
         <div className="">
-            <h1 className="text-2xl font-medium text-white">{heading}</h1>
-            <p className="text-slate-400 mt-2">{des}</p>
+            <h1 className="text-xl md:text-2xl font-medium text-white">{heading}</h1>
+            <p className="text-slate-400 mt-2 text-sm md:text-base">{des}</p>
         </div>
     )
 }

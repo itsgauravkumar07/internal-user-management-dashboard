@@ -35,7 +35,7 @@ export default function Navbar() {
       {/* Mobile Dropdown */}
       {menu && (
         <div className="md:hidden bg-gray-900 border-t border-white/10">
-          <div className="flex flex-col px-5 py-4 gap-3">
+          <div className="flex flex-col px-5 py-4 gap-1">
             <NavbarItem to="/dashboard" label="Dashboard" end />
             <NavbarItem to="/dashboard/users" label="Users" />
             <NavbarItem to="/dashboard/requests" label="Requests" />
@@ -53,10 +53,10 @@ function NavbarItem({ to, label, end }) {
       end={end}
       className={({ isActive }) =>
         `
-        text-sm font-medium transition-colors duration-200
+        text-sm font-medium transition-colors duration-200 px-3 py-2 rounded text-center
         ${isActive
-          ? "text-white"
-          : "text-slate-400 hover:text-white"}
+          ? "bg-blue-500/10 text-blue-600" 
+          : "hover:bg-gray-50/3 text-slate-400"}
         `
       }
     >
