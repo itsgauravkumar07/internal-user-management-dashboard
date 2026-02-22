@@ -9,12 +9,14 @@ export default function AppLayout(){
             <Navbar />
 
             <div className="flex flex-1">
-                <Sidebar />
+                <div className="hidden md:block">
+                    <Sidebar />
+                </div>
+                
                 <main className="flex-1 p-4">
                     <Outlet />
                 </main>
             </div>
-            
         </section>
     )
 }
