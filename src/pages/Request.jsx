@@ -99,7 +99,7 @@ export default function Request(){
 
 
    return (
-  <div className="p-4 md:p-6 text-slate-300 space-y-6 md:space-y-10">
+  <div className="md:p-6 text-slate-300 space-y-6 md:space-y-10">
 
     {/* ADMIN VIEW  */}
     {currentRole === "admin" && (
@@ -114,15 +114,15 @@ export default function Request(){
 
         
         <div className="overflow-x-auto hidden md:block">
-          <table className="w-full text-sm">
+          <table className="min-w-full text-sm">
             <thead className="bg-slate-800 text-slate-400 uppercase text-xs">
               <tr>
-                <th className="px-6 py-4 text-left">User</th>
-                <th className="px-6 py-4 text-left">Type</th>
-                <th className="px-6 py-4 text-left">Value</th>
-                <th className="px-6 py-4 text-left">Time</th>
-                <th className="px-6 py-4 text-right">Status</th>
-                <th className="px-6 py-4 text-right">Action</th>
+                <th className="px-4 py-4 text-left">User</th>
+                <th className="px-4 py-4 text-left">Type</th>
+                <th className="px-4 py-4 text-left">Value</th>
+                <th className="px-4 py-4 text-left">Time</th>
+                <th className="px-4 py-4 text-right">Status</th>
+                <th className="px-4 py-4 text-right">Action</th>
               </tr>
             </thead>
 
@@ -132,23 +132,23 @@ export default function Request(){
 
                 return (
                   <tr key={req.id} className="hover:bg-slate-800/40 transition">
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4">
                       {user ? user.name : "Unknown"}
                     </td>
 
-                    <td className="px-6 py-4 capitalize">
+                    <td className="px-4 py-4 capitalize">
                       {req.type.replace("_", " ")}
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4">
                       {req.requestedValue}
                     </td>
 
-                    <td className="px-6 py-4 text-slate-400">
+                    <td className="px-4 py-4 text-slate-400">
                       {new Date(req.createdAt).toLocaleDateString()}
                     </td>
 
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-4 py-4 text-right">
                       <span
                         className={`px-2 py-1 text-xs rounded-md font-medium ${
                           req.status === "pending"
@@ -169,14 +169,14 @@ export default function Request(){
                             onClick={() =>
                               handleApprove(req.id, req.userId)
                             }
-                            className="px-3 py-1 text-xs font-medium rounded-md bg-green-500/20 text-green-400 hover:bg-green-500/30"
+                            className="px-2 py-1 text-xs font-medium rounded-md bg-green-500/20 text-green-400 hover:bg-green-500/30"
                           >
                             Approve
                           </button>
 
                           <button
                             onClick={() => handleReject(req.id)}
-                            className="px-3 py-1 text-xs font-medium rounded-md bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                            className="px-2 py-1 text-xs font-medium rounded-md bg-red-500/20 text-red-400 hover:bg-red-500/30"
                           >
                             Reject
                           </button>
