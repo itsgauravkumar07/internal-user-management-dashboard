@@ -5,28 +5,29 @@ const AppContext = createContext(null);
 
 export default function AppProvider({ children }){
      
+    const DEMO_USERS = [
+        {
+            id: "demo-admin",
+            name: "Demo Admin",
+            role: "Admin",
+            status: "Active",
+            isDemo: true
+        },
+        {
+            id: "demo-member",
+            name: "Demo Member",
+            role: "Member",
+            status: "Active",
+            isDemo: true
+        }
+        ];
+        
     const [currentRole, setCurrentRole] = useState("admin");
     const [currentUserId, setCurrentUserId] = useState(null);
 
     const [users, setUsers] = useState(() => {
-        const oldUsers = localStorage.getItem('users');
-        if(oldUsers){
-            return JSON.parse(oldUsers);
-        }else{
-             return [ 
-                {
-                    id: crypto.randomUUID(),
-                    name: "Ram",
-                    role: "Admin",
-                    status: "Inactive"
-                },
-                {
-                    id: crypto.randomUUID(),
-                    name: "Adrash",
-                    role: "Member",
-                    status: "Active"
-                }];
-        }
+        const saved = localStorage.getItem('users');
+        return saved ? JSON.parse(saved) : DEMO_USERS;
     });
 
     useEffect(() => {

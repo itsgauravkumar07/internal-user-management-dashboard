@@ -61,14 +61,23 @@ export default function Users(){
             setErrors(error);
             return;
         }
-        
-        const updatedUser = users.map(user => 
-            user.id === editingIdUserId 
-            ? {...user, name, role, status} 
-            : user
-        );
 
-        setUsers(updatedUser);
+        const userToEdit = users.find(u => u.id === editingIdUserId);
+        
+        // Prevent editing demo users
+        if (userToEdit?.isDemo) {
+            alert("Demo users cannot be edited.");
+            return;
+        }
+
+        const updatedUsers = users.map(user => {
+            if (user.id === editingIdUserId) {
+                return { ...user, name, role, status };
+            }
+            return user;
+        });
+
+        setUsers(updatedUsers);
         closeModel();
     }
     
@@ -112,7 +121,14 @@ export default function Users(){
     }
 
     function handleDelete(id){
-        const updatedUser = users.filter(user => user.id !== id);
+        const updatedUser = users.filter(user => {
+          if(user.id === id && user.isDemo){
+            alert("Demo users can't be delete");
+            return true;
+          }
+          return user.id !== id;
+        });
+
         setUsers(updatedUser);
     }
 
