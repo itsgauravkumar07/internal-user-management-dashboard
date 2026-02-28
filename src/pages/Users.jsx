@@ -310,8 +310,8 @@ export default function Users(){
                   onChange={e => setRole(e.target.value)}
                 >
                   <option value="">Select Role</option>
-                  <option value="Admin">Admin</option>
-                  <option value="Member">Member</option>
+                  <option value="admin">Admin</option>
+                  <option value="member">Member</option>
                 </select>
                 <p className="text-red-500 text-xs mt-1">{errors.role}</p>
               </div>

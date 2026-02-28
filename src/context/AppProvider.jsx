@@ -9,19 +9,40 @@ export default function AppProvider({ children }){
         {
             id: "demo-admin",
             name: "Demo Admin",
-            role: "Admin",
+            role: "admin",
             status: "Active",
             isDemo: true
         },
         {
-            id: "demo-member",
+            id: "demo-member 1",
             name: "Demo Member",
-            role: "Member",
+            role: "member",
             status: "Active",
             isDemo: true
+        },
+        {
+            id: "demo-member 02",
+            name: "Ravina - Demo Member",
+            role: "member",
+            status: "Active",
+            isDemo: false
+        },
+        {
+            id: "demo-member 03",
+            name: "Prabash - Demo Member",
+            role: "member",
+            status: "Active",
+            isDemo: false
+        },
+        {
+            id: "demo-member 04",
+            name: "Rohan - Demo Member",
+            role: "member",
+            status: "Active",
+            isDemo: false
         }
         ];
-        
+
     const [currentRole, setCurrentRole] = useState("admin");
     const [currentUserId, setCurrentUserId] = useState(null);
 
@@ -41,7 +62,7 @@ export default function AppProvider({ children }){
         }else {
             return [{
                     id: crypto.randomUUID(),
-                    userId: users[0]?.id,
+                    userId: users[2]?.id,
                     type: "role_change",
                     requestedValue: "admin",
                     status: "pending",
@@ -49,7 +70,15 @@ export default function AppProvider({ children }){
                 },
                 {
                     id: crypto.randomUUID(),
-                    userId: users[1]?.id,
+                    userId: users[3]?.id,
+                    type: "role_change",
+                    requestedValue: "admin",
+                    status: "pending",
+                    createdAt: Date.now()
+                },
+                {
+                    id: crypto.randomUUID(),
+                    userId: users[4]?.id,
                     type: "role_change",
                     requestedValue: "admin",
                     status: "pending",
