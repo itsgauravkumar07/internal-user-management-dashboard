@@ -120,6 +120,12 @@ This project uses **mock data and simulated roles** to focus on frontend archite
 
 ---
 
+## App link : 
+
+https://internal-user-management-dashboard.vercel.app/
+
+---
+
 ## 📬 Feedback
 
 Feedback, suggestions, and reviews are welcome.
