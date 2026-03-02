@@ -91,9 +91,9 @@ src/
 
 ## 🚧 Current Status
 
-- Building the core features...  
+- Project is completed.
 
-The project is being built **step by step** as part of the 30-day challenge.
+The project is built **step by step** as part of the 30-day challenge.
 
 ---
 
@@ -110,7 +110,7 @@ This project is part of my **30DaysRemoteInternship** challenge, where I:
 
 ## 📷 Demo
 
-Demo video and screenshots will be added once core features are completed.
+Demo video link : https://www.youtube.com/watch?v=JRiDMn_0jFk
 
 ---
 
