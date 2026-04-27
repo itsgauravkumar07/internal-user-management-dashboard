@@ -1,10 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useAppContext } from "../context/AppProvider"
 import { MdOutlineSecurity, MdOutlinePerson2 } from "react-icons/md";
 
 export default function RoleSelect(){
 
-    const { setCurrentRole, setCurrentUserId, users } = useAppContext();
     const navigate = useNavigate();
 
     const handleAdminLogin = async () => {
@@ -55,17 +53,6 @@ export default function RoleSelect(){
         console.log("Member Token: ", data.token);
     };
 
-    // function setAdmin(){
-    //     setCurrentRole("admin");
-    //     setCurrentUserId(users[0].id);
-    //     navigate("/dashboard");
-    // }
-
-    // function setMember(){
-    //     setCurrentRole("member");
-    //     setCurrentUserId(users[1].id);
-    //     navigate("/dashboard");
-    // }
     return(
         <section  className="max-w-8xl flex justify-center items-center px-10 flex-col min-h-screen bg-slate-900">
 

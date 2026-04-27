@@ -5,6 +5,7 @@ import Users from "./pages/Users";
 import AppLayout from "./layouts/AppLayout";
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
+import ProtectedRoute from "./route/ProtectedRoute";
 
 function App() {
 
@@ -13,7 +14,14 @@ function App() {
       <Routes>
         <Route path='/' element={<RoleSelection />} />
 
-        <Route path='/dashboard' element={<AppLayout />}>
+        <Route 
+          path='/dashboard' 
+          element={
+            <ProtectedRoute>
+              <AppLayout />
+            </ProtectedRoute> 
+          }
+        >
           <Route index element={<Dashboard />} />
           <Route path="requests" element={<Request />} />
           <Route path='users' element={<Users />} />

@@ -48,8 +48,7 @@ app.post("/login", async (req, res) => {
     }
 
     const user = users.find(u => u.email === email);
-    console.log("Users:", users);
-    console.log("Login email:", email);
+
     if(!user){
         return res.status(401).json({ message: "User not find" });
     }
