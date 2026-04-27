@@ -7,17 +7,65 @@ export default function RoleSelect(){
     const { setCurrentRole, setCurrentUserId, users } = useAppContext();
     const navigate = useNavigate();
 
-    function setAdmin(){
-        setCurrentRole("admin");
-        setCurrentUserId(users[0].id);
-        navigate("/dashboard");
-    }
+    const handleAdminLogin = async () => {
+        const res = await fetch("http://localhost:4000/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: "admin@test.com",
+                password: "123456"
+            })
+        });
 
-    function setMember(){
-        setCurrentRole("member");
-        setCurrentUserId(users[1].id);
+        const data = await res.json();
+
+        if(!res.ok){
+            alert(data.message);
+            return;
+        }
+
+        localStorage.setItem("token", data.token);
         navigate("/dashboard");
-    }
+        console.log("Admin Token: ", data.token);
+    };
+
+    const handleMemberLogin = async () => {
+        const res = await fetch("http://localhost:4000/login", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+            email: "member@test.com",
+            password: "123456"
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message);
+            return;
+        }
+
+        localStorage.setItem("token", data.token);
+        navigate("/dashboard");
+        console.log("Member Token: ", data.token);
+    };
+
+    // function setAdmin(){
+    //     setCurrentRole("admin");
+    //     setCurrentUserId(users[0].id);
+    //     navigate("/dashboard");
+    // }
+
+    // function setMember(){
+    //     setCurrentRole("member");
+    //     setCurrentUserId(users[1].id);
+    //     navigate("/dashboard");
+    // }
     return(
         <section  className="max-w-8xl flex justify-center items-center px-10 flex-col min-h-screen bg-slate-900">
 
@@ -32,7 +80,7 @@ export default function RoleSelect(){
                 {/* Card 01 : View as admin*/}
                 <div  
                     className="cursor-pointer border border-slate-400/20 px-8 py-5 rounded-2xl bg-slate-800/80 hover:border-blue-500/50"
-                    onClick={setAdmin}>
+                    onClick={handleAdminLogin}>
 
                     {/* Icon design */}
                     <div className="bg-blue-800/20 w-fit rounded-2xl py-4 px-3 mb-5 ">
@@ -49,7 +97,7 @@ export default function RoleSelect(){
                 {/* Card 02 :View as member */}
                 <div 
                     className="cursor-pointer border border-slate-400/20 px-8 py-5 rounded-2xl bg-slate-800/80 hover:border-blue-500/50"
-                    onClick={setMember}>
+                    onClick={handleMemberLogin}>
 
                     {/* Icons design */}
                     <div className="bg-blue-800/20 w-fit rounded-2xl py-4 px-3 mb-5 ">
