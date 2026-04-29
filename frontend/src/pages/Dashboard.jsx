@@ -11,7 +11,9 @@ import { AiOutlineFileDone } from "react-icons/ai";
 
 export default function Dashboard(){
 
-    const { users, requests, currentRole, currentUserId } = useAppContext();
+    const { users, requests, getAuthUser } = useAppContext();
+
+    const authUser = getAuthUser();
     
     //Admin summary card  logic
     const activeUsersCount = users.filter((user) => user.status === "Active").length;
@@ -19,15 +21,14 @@ export default function Dashboard(){
     const pendingReqCount = requests.filter((req) => req.status === "pending").length;
     
     //Member summary card logic
-    const currentUser = users.find(u => u.id === currentUserId);
-    const totalRequests = requests.filter((u) =>u.userId === currentUserId);
+    const totalRequests = requests.filter((r) => r.userId === authUser?.userId);
     const pendingRequests = totalRequests.filter(u => u.status === "pending").length;
 
     
     return(
         <div className="min-h-full">
            
-            {currentRole === "admin" 
+            {authUser?.role === "admin" 
             ? 
                 <>
                     {/* Admin Dashboard View */}
@@ -71,12 +72,12 @@ export default function Dashboard(){
                         <Card 
                             icon={BsPersonCheck}
                             label="Role"
-                            des={currentUser?.role}
+                            des={authUser?.role}
                         />
                         <Card 
                             icon={HiStatusOnline}
                             label="Current Status"
-                            des={currentUser?.status}
+                            des={"Active"}
                         />
                         <Card 
                             icon={MdOutlinePendingActions}

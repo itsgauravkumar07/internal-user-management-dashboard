@@ -1,11 +1,21 @@
 import { useState } from "react";
 import { useAppContext } from "../context/AppProvider";
 import { MdMenu, MdClose } from "react-icons/md";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-  const { currentRole } = useAppContext();
+  const { getAuthUser } = useAppContext();
+  const authUser = getAuthUser();
+
   const [menu, setMenu] = useState(false);
+  const navigate = useNavigate();
+
+  function handleLogOut(){
+    const token = localStorage.getItem("token");
+    localStorage.clear(token);
+
+    navigate("/");
+  }
 
   return (
     <nav className="bg-gray-900 border-b border-white/10 sticky top-0 z-50">
@@ -19,8 +29,15 @@ export default function Navbar() {
         {/* Mobile Section */}
         <div className="flex items-center gap-3 ">
           <span className="text-xs px-2 py-1 md:text-sm md:px-4 md:py-2 bg-blue-800/60 text-white font-medium rounded-lg border border-blue-600/40">
-            {currentRole}
+            {authUser?.role}
           </span>
+
+          <button 
+            className="text-xs px-2 py-1 md:text-sm md:px-4 md:py-2 bg-blue-800/60 text-white font-medium rounded-lg border border-blue-600/40 hover:bg-blue-800/90"
+            onClick={handleLogOut}
+            >
+              Logout
+          </button>
 
           <button onClick={() => setMenu(!menu)} className="md:hidden">
             {menu ? (

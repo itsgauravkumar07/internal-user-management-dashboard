@@ -3,98 +3,63 @@ import { useAppContext } from '../context/AppProvider';
 
 export default function Request(){
 
-    const { requests, setRequests, currentRole, users, currentUserId, setUsers } = useAppContext();
+    const { requests, addRequest, updateRequest, getAuthUser } = useAppContext();
     const [reqType, setReqType] = useState('');
     const [roleChange, setRoleChange] = useState('');
     const [accessReq, setAccessReq] = useState('');
     const [errors, setErrors] = useState({});
+    const authUser = getAuthUser();
 
     //Member submit
-    function handleSubmit(e){
-
+    async function handleSubmit(e){
       e.preventDefault();
 
       let error = {};
 
-      if(!reqType){
-        error.reqType = "Select request type";
-      }
-      if(reqType === "role_change" && !roleChange){
-        error.roleChange = "Select Role";
-      }
-
-      if(reqType === "access_request" && !accessReq){
-        error.accessReq = "Select Access status"
-      }
+      if(!reqType) error.reqType = "Select request type";
+      if(reqType === "role_change" && !roleChange) error.roleChange = "Select Role";
+      if(reqType === "access_request" && !accessReq) error.accessReq = "Select Access";
 
       if(Object.keys(error).length > 0){
         setErrors(error);
         return;
       }
 
-        const requestedValue = reqType === "role_change" ? roleChange : accessReq;
-        
-        const reqObj = {
-            id: crypto.randomUUID(),
-            userId: currentUserId,
-            type: reqType,
-            requestedValue,
-            createdAt: Date.now(),
-            status: "pending",
-        }
-        setRequests([...requests, reqObj]);
+      const requestedValue =
+        reqType === "role_change" ? roleChange : accessReq;
+
+      try {
+        await addRequest({
+          type: reqType,
+          requestedValue
+        });
+
         setRoleChange("");
         setAccessReq("");
         setReqType("");
         setErrors({});
-    }
+      } catch (err) {
+        alert(err.message);
+      }
+  }
 
     //Admin Approval
-    function handleApprove(requestId){
-
-        //find the request that approved
-       const request = requests.find(r => r.id === requestId);
-       if(!request) return;
-       //Update the status of request: pending => Approved
-       const updatedReq = requests.map(req =>
-        req.id === requestId 
-        ? {...req, status: "approved"}
-        : req
-       )
-       setRequests(updatedReq);
-
-       //Update requested data in users
-       setUsers(prev => 
-        prev.map(user => {
-        
-            if(user.id !== request.userId) return user;
-
-            if(request.type === "role_change"){
-                return {...user, role: request.requestedValue};
-            }
-
-            if(request.type === "access_request"){
-                return {...user, status: request.requestedValue};
-            }
-
-            return user;
-        })
-       )
-    }
+   async function handleApprove(requestId){
+    await updateRequest(requestId, "approved");
+  }
 
     //Amin Reject
-    function handleReject(requestId){
-        const updatedReq = requests.map(req => 
-            req.id === requestId
-            ? {...req, status: "reject"}
-            : req
-        )
-        setRequests(updatedReq);
+    async function handleReject(requestId){
+      try {
+        await updateRequest(requestId, "rejected");
+      } catch (err) {
+        alert(err.message);
+      }
     }
 
     //Filter requests according to the member
     const myRequests = requests.filter(
-        (req) => req.userId === currentUserId
+        (req) => req.userId === authUser?.userId
     );
 
 
@@ -102,7 +67,7 @@ export default function Request(){
   <div className="md:p-6 text-slate-300 space-y-6 md:space-y-10">
 
     {/* ADMIN VIEW  */}
-    {currentRole === "admin" && (
+    {authUser?.role === "admin" && (
       <div className="bg-slate-900 rounded-xl border border-white/10 shadow-md overflow-hidden">
 
         <div className="p-6 border-b border-white/10">
@@ -128,12 +93,11 @@ export default function Request(){
 
             <tbody className="divide-y divide-white/5">
               {requests.map(req => {
-                const user = users.find(u => u.id === req.userId);
 
                 return (
                   <tr key={req.id} className="hover:bg-slate-800/40 transition">
                     <td className="px-4 py-4">
-                      {user ? user.name : "Unknown"}
+                      {req.userName || "Unknown"}
                     </td>
 
                     <td className="px-4 py-4 capitalize">
@@ -167,7 +131,7 @@ export default function Request(){
                         <div className="flex justify-end gap-3">
                           <button
                             onClick={() =>
-                              handleApprove(req.id, req.userId)
+                              handleApprove(req.id)
                             }
                             className="px-2 py-1 text-xs font-medium rounded-md bg-green-500/20 text-green-400 hover:bg-green-500/30"
                           >
@@ -193,7 +157,6 @@ export default function Request(){
               {/* MOBILE CARDS */}
         <div className="md:hidden space-y-4 p-4">
           {requests.map(req => {
-            const user = users.find(u => u.id === req.userId);
 
             return (
               <div
@@ -202,7 +165,7 @@ export default function Request(){
               >
                 <div className="flex justify-between items-center">
                   <h3 className="text-white font-medium">
-                    {user ? user.name : "Unknown"}
+                    {req.userName || "Unknown"}
                   </h3>
 
                   <StatusBadge status={req.status} />
@@ -230,7 +193,7 @@ export default function Request(){
                         <div className="flex justify-end gap-3">
                           <button
                             onClick={() =>
-                              handleApprove(req.id, req.userId)
+                              handleApprove(req.id)
                             }
                             className="px-3 py-1 text-xs font-medium rounded-md bg-green-500/20 text-green-400 hover:bg-green-500/30"
                           >
@@ -253,7 +216,7 @@ export default function Request(){
     )}
 
     {/* MEMBER VIEW */}
-    {currentRole !== "admin" && (
+    {authUser?.role !== "admin" && (
   <div className="space-y-8">
 
     {/* Request Form */}
@@ -333,8 +296,7 @@ export default function Request(){
           </div>
         )}
 
-        <button className="mt-2 bg-blue-600 hover:bg-blue-700 
-                           transition rounded-md py-2 text-sm font-medium">
+        <button className="mt-2 bg-blue-600 hover:bg-blue-700 transition rounded-md py-2 text-sm font-medium">
           Submit Request
         </button>
       </form>

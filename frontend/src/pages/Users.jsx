@@ -6,7 +6,7 @@ import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 
 export default function Users(){
 
-    const { users, currentRole, setUsers } = useAppContext();
+    const { users, getAuthUser, setUsers, addUser, updateUser, deleteUser } = useAppContext();
     const [isModal, setIsModal] = useState(false);
     const [name, setName] = useState('');
     const [role, setRole] = useState('');
@@ -14,6 +14,8 @@ export default function Users(){
     const [errors, setErrors] = useState({});
     const [mode, setMode] = useState("add");
     const [editingIdUserId, seteditingUserId] = useState(null);
+
+    const authUser = getAuthUser();
 
     function addOpenModel(){
         setIsModal(!isModal);
@@ -39,98 +41,63 @@ export default function Users(){
         setErrors({});
     }
 
-    function handleEdit(e){
-        e.preventDefault();
+    async function handleEdit(e){
+      e.preventDefault();
 
-        let error = {};
+      let error = {};
 
-        if(!name.trim()){
-            error.name = "Name required";
-        }
+      if(!name.trim()) error.name = "Name required";
+      if(!role.trim()) error.role = "Role Required";
+      if(!status.trim()) error.status = "Status required";
 
-        if(!role.trim()){
-            error.role = "Role Required";
-        }
+      if(Object.keys(error).length > 0){
+        setErrors(error);
+        return;
+      }
 
-        if(!status.trim()){
-            error.status = "Status required";
-        }
-        
-
-        if(Object.keys(error).length > 0){
-            setErrors(error);
-            return;
-        }
-
-        const userToEdit = users.find(u => u.id === editingIdUserId);
-        
-        // Prevent editing demo users
-        if (userToEdit?.isDemo) {
-            alert("Demo users cannot be edited.");
-            return;
-        }
-
-        const updatedUsers = users.map(user => {
-            if (user.id === editingIdUserId) {
-                return { ...user, name, role, status };
-            }
-            return user;
-        });
-
-        setUsers(updatedUsers);
+      try {
+        await updateUser(editingIdUserId, { name, role, status });
         closeModel();
-    }
+      } catch (err) {
+        alert(err.message);
+      }
+  }
     
-    function handleAdd(e){
+    async function handleAdd(e){
+      e.preventDefault();
 
-        e.preventDefault();
+      let error = {};
 
-        let error = {};
+      if(!name.trim()) error.name = "Name required";
+      if(!role.trim()) error.role = "Role Required";
+      if(!status.trim()) error.status = "Status required";
 
-        if(!name.trim()){
-            error.name = "Name required";
-        }
+      if(Object.keys(error).length > 0){
+        setErrors(error);
+        return;
+      }
 
-        if(!role.trim()){
-            error.role = "Role Required";
-        }
-
-        if(!status.trim()){
-            error.status = "Status required";
-        }
-        
-
-        if(Object.keys(error).length > 0){
-            setErrors(error);
-            return;
-        }
-        
-        const newValue = {
-                id: Date.now().toString(36),
-                name: name,
-                role: role,
-                status: status
-            };
-
-        setUsers([...users, newValue]);
+      try {
+        await addUser({ name, role, status });
         closeModel();
-        setName("");
-        setRole("");
-        setStatus("");
-        setErrors({});
-    }
+      } catch (err) {
+        alert(err.message);
+      }
+  }
 
-    function handleDelete(id){
-        const updatedUser = users.filter(user => {
-          if(user.id === id && user.isDemo){
-            alert("Demo users can't be delete");
-            return true;
-          }
-          return user.id !== id;
-        });
+  async function handleDelete(id){
+    const userTODelete = users.find(u => u.id === id);
 
-        setUsers(updatedUser);
+    if (userTODelete?.name.includes("Demo")) {
+      alert("Demo users can't be deleted");
+      return;
     }
+    try {
+      await deleteUser(id);
+    } catch (err) {
+      alert(err.message);
+    }
+}
 
    return (
   <section className="p-4 md:p-6 text-slate-300 space-y-6 md:space-y-8">
@@ -142,13 +109,13 @@ export default function Users(){
         <HeaderSection
           heading="Users"
           des={
-            currentRole === "admin"
+            authUser?.role === "admin"
               ? "Manage system access, roles, and account status."
               : "Read-only access to users and roles."
           }
         />
 
-        {currentRole === "admin" && (
+        {authUser?.role === "admin" && (
           <button
             onClick={addOpenModel}
             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 transition px-4 py-2 rounded-md text-sm font-medium"
@@ -173,7 +140,7 @@ export default function Users(){
                 <th className="px-3 md:px-6 py-3 md:py-4 text-left">Name</th>
                 <th className="px-3 md:px-6 py-3 md:py-4 text-left">Role</th>
                 <th className="px-3 md:px-6 py-3 md:py-4 text-right">Status</th>
-                {currentRole === "admin" && (
+                {authUser?.role === "admin" && (
                   <th className="px-3 md:px-6 py-3 md:py-4 text-right">Action</th>
                 )}
               </tr>
@@ -197,7 +164,7 @@ export default function Users(){
                     </span>
                   </td>
 
-                  {currentRole === "admin" && (
+                  {authUser?.role === "admin" && (
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-3">
                         <button
@@ -250,7 +217,8 @@ export default function Users(){
                   </div>
 
                   {/* Actions (Admin Only) */}
-                  {currentRole === "admin" && (
+                  {authUser?.role === "admin" && (
+
                     <div className="flex justify-end gap-4 pt-2 border-t border-white/10">
                       <button
                         onClick={() => editOpenModel(user.id)}

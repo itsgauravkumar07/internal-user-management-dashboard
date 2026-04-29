@@ -5,106 +5,176 @@ const AppContext = createContext(null);
 
 export default function AppProvider({ children }){
      
-    const DEMO_USERS = [
-        {
-            id: "demo-admin",
-            name: "Demo Admin",
-            role: "admin",
-            status: "Active",
-            isDemo: true
-        },
-        {
-            id: "demo-member 1",
-            name: "Demo Member",
-            role: "member",
-            status: "Active",
-            isDemo: true
-        },
-        {
-            id: "demo-member 02",
-            name: "Ravina - Demo Member",
-            role: "member",
-            status: "Active",
-            isDemo: false
-        },
-        {
-            id: "demo-member 03",
-            name: "Prabash - Demo Member",
-            role: "member",
-            status: "Active",
-            isDemo: false
-        },
-        {
-            id: "demo-member 04",
-            name: "Rohan - Demo Member",
-            role: "member",
-            status: "Active",
-            isDemo: false
+    const [users, setUsers] = useState([]);
+    const [authUser, setAuthUser] = useState(getAuthUser());
+
+    function getAuthUser(){
+        const token = localStorage.getItem("token");
+        if(!token) return null;
+
+        try {
+            return JSON.parse(atob(token.split(".")[1]));
+        } catch {
+            return null;
         }
-        ];
-
-    const [currentRole, setCurrentRole] = useState("admin");
-    const [currentUserId, setCurrentUserId] = useState(null);
-
-    const [users, setUsers] = useState(() => {
-        const saved = localStorage.getItem('users');
-        return saved ? JSON.parse(saved) : DEMO_USERS;
-    });
+    }
 
     useEffect(() => {
-    localStorage.setItem('users', JSON.stringify(users))
-    }, [users]);
+    const token = localStorage.getItem("token");
 
-    const [requests, setRequests] = useState(() => {
-        const req = localStorage.getItem('req');
-        if(req){
-            return JSON.parse(req);
-        }else {
-            return [{
-                    id: crypto.randomUUID(),
-                    userId: users[2]?.id,
-                    type: "role_change",
-                    requestedValue: "admin",
-                    status: "pending",
-                    createdAt: Date.now()
-                },
-                {
-                    id: crypto.randomUUID(),
-                    userId: users[3]?.id,
-                    type: "role_change",
-                    requestedValue: "admin",
-                    status: "pending",
-                    createdAt: Date.now()
-                },
-                {
-                    id: crypto.randomUUID(),
-                    userId: users[4]?.id,
-                    type: "role_change",
-                    requestedValue: "admin",
-                    status: "pending",
-                    createdAt: Date.now()
-                }];
+    fetch("http://localhost:4000/app-users", {
+        headers: {
+        Authorization: `Bearer ${token}`
+        }
+    })
+        .then(res => res.json())
+        .then(data => setUsers(data));
+    }, []);
+
+    async function addUser(newUser) {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch("http://localhost:4000/app-users", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(newUser)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.message);
+        }
+
+        // update global state
+        setUsers(prev => [...prev, data.user]);
+    }
+
+    async function updateUser(id, updatedData) {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(`http://localhost:4000/app-users/${id}`, {
+            method: "PUT",
+            headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(updatedData)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.message);
+        }
+
+        // update global state
+        setUsers(prev =>
+            prev.map(user =>
+            user.id === id ? data.user : user
+            )
+        );
+    }
+
+    async function deleteUser(id) {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(`http://localhost:4000/app-users/${id}`, {
+            method: "DELETE",
+            headers: {
+            Authorization: `Bearer ${token}`
             }
-        }
-    );
+        });
 
-    useEffect(() => {
-        localStorage.setItem('req', JSON.stringify(requests))
-    }, [requests]);
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.message);
+        }
+
+        // update global state
+        setUsers(prev => prev.filter(user => user.id !== id));
+    }
+
+    const [requests, setRequests] = useState([]);
     
-   
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if(!token) return;
+
+        fetch("http://localhost:4000/requests", {
+            headers: {
+            Authorization: `Bearer ${token}`
+            }
+        })
+            .then(res => {
+            if (!res.ok) throw new Error("Failed to fetch requests");
+            return res.json();
+        })
+            .then(data => setRequests(data))
+            .catch(err => {
+                console.log(err);
+                setRequests([]); // fallback safe
+            });
+
+    }, []);
+
+    async function addRequest(newRequest) {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch("http://localhost:4000/requests", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(newRequest)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.message);
+
+        setRequests(prev => [...prev, data.request]);
+    }
+
+    async function updateRequest(id, status) {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(`http://localhost:4000/requests/${id}`, {
+            method: "PUT",
+            headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ status })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.message);
+
+        setRequests(prev =>
+            prev.map(r => (r.id === id ? data.request : r))
+        );
+    }
 
     return(
         <AppContext.Provider 
             value={{
-                currentRole,
-                setCurrentRole,
                 users,
                 setUsers,
                 requests,
-                setRequests,
-                currentUserId,
-                setCurrentUserId,
+                addRequest,
+                updateRequest,
+                getAuthUser,
+                addUser,
+                updateUser,
+                deleteUser
             }}>
                 {children}                    
         </AppContext.Provider>
