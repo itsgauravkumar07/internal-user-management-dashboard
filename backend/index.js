@@ -145,7 +145,7 @@ app.post("/app-users", authMiddleware, async (req, res) => {
 });
 
 
-//Get all App-user API
+//Get All App-user API
 app.get("/app-users", authMiddleware, async (req, res) => {
  try {
   const users = await AppUser.find();
