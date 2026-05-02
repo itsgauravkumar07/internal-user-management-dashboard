@@ -6,38 +6,46 @@ import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 
 export default function Users(){
 
-    const { users, getAuthUser, setUsers, addUser, updateUser, deleteUser } = useAppContext();
+    const { users, getAuthUser, addUser, updateUser, deleteUser } = useAppContext();
     const [isModal, setIsModal] = useState(false);
     const [name, setName] = useState('');
     const [role, setRole] = useState('');
     const [status, setStatus] = useState('');
     const [errors, setErrors] = useState({});
     const [mode, setMode] = useState("add");
-    const [editingIdUserId, seteditingUserId] = useState(null);
+    const [editingUserId, setEditingUserId] = useState(null);
 
     const authUser = getAuthUser();
 
     function addOpenModel(){
-        setIsModal(!isModal);
+        setIsModal(true);
         setMode("add");
     }
 
     function editOpenModel(id){
-        const user = users.find(u => u.id === id);
-        seteditingUserId(id);
+
+        const user = users.find(u => u._id === id);
+
+        if(!user){
+          alert("User not found");
+          return;
+        }
+
+        setEditingUserId(id);
         setName(user.name);
         setRole(user.role);
         setStatus(user.status);
 
-        setIsModal(!isModal);
+        setIsModal(true);
         setMode("edit");
     }
 
     function closeModel(){
-        setIsModal(!isModal);
+        setIsModal(false);
         setName("");
         setRole("");
         setStatus("");
+        setEditingUserId(null);
         setErrors({});
     }
 
@@ -56,7 +64,7 @@ export default function Users(){
       }
 
       try {
-        await updateUser(editingIdUserId, { name, role, status });
+        await updateUser(editingUserId, { name, role, status });
         closeModel();
       } catch (err) {
         alert(err.message);
@@ -86,7 +94,7 @@ export default function Users(){
   }
 
   async function handleDelete(id){
-    const userTODelete = users.find(u => u.id === id);
+    const userTODelete = users.find(u => u._id === id);
 
     if (userTODelete?.name.includes("Demo")) {
       alert("Demo users can't be deleted");
@@ -148,7 +156,7 @@ export default function Users(){
 
             <tbody className="divide-y divide-white/5">
               {users.map(user => (
-                <tr key={user.id} className="hover:bg-slate-800/40 transition">
+                <tr key={user._id} className="hover:bg-slate-800/40 transition">
                   <td className="px-6 py-4">{user.name}</td>
                   <td className="px-6 py-4">{user.role}</td>
 
@@ -168,14 +176,14 @@ export default function Users(){
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-3">
                         <button
-                          onClick={() => editOpenModel(user.id)}
+                          onClick={() => editOpenModel(user._id)}
                           className="p-2 rounded-md hover:bg-blue-500/20 text-blue-400 transition"
                         >
                           <MdOutlineEdit className="w-5 h-5" />
                         </button>
 
                         <button
-                          onClick={() => handleDelete(user.id)}
+                          onClick={() => handleDelete(user._id)}
                           className="p-2 rounded-md hover:bg-red-500/20 text-red-400 transition"
                         >
                           <MdDeleteOutline className="w-5 h-5" />
@@ -193,7 +201,7 @@ export default function Users(){
         <div className="md:hidden space-y-4 p-4">
               {users.map(user => (
                 <div
-                  key={user.id}
+                  key={user._id}
                   className="bg-slate-800/40 border border-white/10 rounded-xl p-4 space-y-3"
                 >
                   {/* Name */}
@@ -221,14 +229,14 @@ export default function Users(){
 
                     <div className="flex justify-end gap-4 pt-2 border-t border-white/10">
                       <button
-                        onClick={() => editOpenModel(user.id)}
+                        onClick={() => editOpenModel(user._id)}
                         className="p-2 rounded-md hover:bg-blue-500/20 text-blue-400 transition"
                       >
                         <MdOutlineEdit className="w-5 h-5" />
                       </button>
 
                       <button
-                        onClick={() => handleDelete(user.id)}
+                        onClick={() => handleDelete(user._id)}
                         className="p-2 rounded-md hover:bg-red-500/20 text-red-400 transition"
                       >
                         <MdDeleteOutline className="w-5 h-5" />

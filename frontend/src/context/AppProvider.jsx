@@ -1,12 +1,16 @@
 import { createContext, useContext, useEffect } from "react";
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
+
+
 
 const AppContext = createContext(null);
 
 export default function AppProvider({ children }){
+
+    const navigate = useNavigate();
      
     const [users, setUsers] = useState([]);
-    const [authUser, setAuthUser] = useState(getAuthUser());
 
     function getAuthUser(){
         const token = localStorage.getItem("token");
@@ -22,12 +26,20 @@ export default function AppProvider({ children }){
     useEffect(() => {
     const token = localStorage.getItem("token");
 
+    if(!token){
+        navigate("/");
+        return;
+    }
+
     fetch("http://localhost:4000/app-users", {
         headers: {
         Authorization: `Bearer ${token}`
         }
     })
-        .then(res => res.json())
+        .then(res => {
+            if(!res.ok) throw new Error("Failed to fetch users");
+            return res.json();
+        })
         .then(data => setUsers(data));
     }, []);
 
@@ -74,7 +86,7 @@ export default function AppProvider({ children }){
         // update global state
         setUsers(prev =>
             prev.map(user =>
-            user.id === id ? data.user : user
+            user._id === id ? data.user : user
             )
         );
     }
@@ -96,7 +108,7 @@ export default function AppProvider({ children }){
         }
 
         // update global state
-        setUsers(prev => prev.filter(user => user.id !== id));
+        setUsers(prev => prev.filter(user => user._id !== id));
     }
 
     const [requests, setRequests] = useState([]);
@@ -159,7 +171,7 @@ export default function AppProvider({ children }){
         if (!res.ok) throw new Error(data.message);
 
         setRequests(prev =>
-            prev.map(r => (r.id === id ? data.request : r))
+            prev.map(r => (r._id === id ? data.request : r))
         );
     }
 

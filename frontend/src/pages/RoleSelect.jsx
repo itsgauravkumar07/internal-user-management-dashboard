@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { MdOutlineSecurity, MdOutlinePerson2 } from "react-icons/md";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function RoleSelect(){
 
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -12,11 +13,13 @@ export default function RoleSelect(){
         if(token){
             navigate("/dashboard");
         }
-    }, []);
+    }, [navigate]);
     
 
     const handleLogin = async (email) => {
         try {
+            setLoading(true);
+
             const res = await fetch("http://localhost:4000/login", {
             method: "POST",
             headers: {
@@ -40,6 +43,8 @@ export default function RoleSelect(){
 
         } catch (err) {
             console.log("Login error:", err);
+        } finally {
+            setLoading(false);
         }
     };
 

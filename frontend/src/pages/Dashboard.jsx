@@ -14,6 +14,11 @@ export default function Dashboard(){
     const { users, requests, getAuthUser } = useAppContext();
 
     const authUser = getAuthUser();
+
+    //Map AuthUser -> AppUser
+    const currentAppUser = users.find(
+        (u) => String(u._id) === String(authUser?.userId)
+    );
     
     //Admin summary card  logic
     const activeUsersCount = users.filter((user) => user.status === "Active").length;
@@ -21,7 +26,12 @@ export default function Dashboard(){
     const pendingReqCount = requests.filter((req) => req.status === "pending").length;
     
     //Member summary card logic
-    const totalRequests = requests.filter((r) => r.userId === authUser?.userId);
+    const totalRequests = currentAppUser
+        ? requests.filter(
+            (r) => String(r.userId) === String(currentAppUser?._id)
+            )
+        : [];
+        
     const pendingRequests = totalRequests.filter(u => u.status === "pending").length;
 
     

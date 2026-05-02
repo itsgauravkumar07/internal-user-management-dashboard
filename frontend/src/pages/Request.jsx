@@ -3,12 +3,16 @@ import { useAppContext } from '../context/AppProvider';
 
 export default function Request(){
 
-    const { requests, addRequest, updateRequest, getAuthUser } = useAppContext();
+    const { requests, addRequest, updateRequest, getAuthUser, users } = useAppContext();
     const [reqType, setReqType] = useState('');
     const [roleChange, setRoleChange] = useState('');
     const [accessReq, setAccessReq] = useState('');
     const [errors, setErrors] = useState({});
     const authUser = getAuthUser();
+
+    const currentAppUser = users.find(
+      (u) => String(u._id) === String(authUser?.userId)
+    );
 
     //Member submit
     async function handleSubmit(e){
@@ -28,8 +32,15 @@ export default function Request(){
       const requestedValue =
         reqType === "role_change" ? roleChange : accessReq;
 
+      if(!currentAppUser){
+        alert("User not found");
+        return;
+      }
+
+
       try {
         await addRequest({
+          userId: currentAppUser._id,
           type: reqType,
           requestedValue
         });
@@ -58,9 +69,11 @@ export default function Request(){
     }
 
     //Filter requests according to the member
-    const myRequests = requests.filter(
-        (req) => req.userId === authUser?.userId
-    );
+    const myRequests = currentAppUser
+      ? requests.filter(
+        (req) => String(req.userId ) === String(currentAppUser._id)
+    )
+    : [];
 
 
    return (
@@ -95,7 +108,7 @@ export default function Request(){
               {requests.map(req => {
 
                 return (
-                  <tr key={req.id} className="hover:bg-slate-800/40 transition">
+                  <tr key={req._id} className="hover:bg-slate-800/40 transition">
                     <td className="px-4 py-4">
                       {req.userName || "Unknown"}
                     </td>
@@ -131,7 +144,7 @@ export default function Request(){
                         <div className="flex justify-end gap-3">
                           <button
                             onClick={() =>
-                              handleApprove(req.id)
+                              handleApprove(req._id)
                             }
                             className="px-2 py-1 text-xs font-medium rounded-md bg-green-500/20 text-green-400 hover:bg-green-500/30"
                           >
@@ -139,7 +152,7 @@ export default function Request(){
                           </button>
 
                           <button
-                            onClick={() => handleReject(req.id)}
+                            onClick={() => handleReject(req._id)}
                             className="px-2 py-1 text-xs font-medium rounded-md bg-red-500/20 text-red-400 hover:bg-red-500/30"
                           >
                             Reject
@@ -160,7 +173,7 @@ export default function Request(){
 
             return (
               <div
-                key={req.id}
+                key={req._id}
                 className="bg-slate-800/40 border border-white/10 rounded-xl p-4 space-y-3"
               >
                 <div className="flex justify-between items-center">
@@ -193,7 +206,7 @@ export default function Request(){
                         <div className="flex justify-end gap-3">
                           <button
                             onClick={() =>
-                              handleApprove(req.id)
+                              handleApprove(req._id)
                             }
                             className="px-3 py-1 text-xs font-medium rounded-md bg-green-500/20 text-green-400 hover:bg-green-500/30"
                           >
@@ -201,7 +214,7 @@ export default function Request(){
                           </button>
 
                           <button
-                            onClick={() => handleReject(req.id)}
+                            onClick={() => handleReject(req._id)}
                             className="px-3 py-1 text-xs font-medium rounded-md bg-red-500/20 text-red-400 hover:bg-red-500/30"
                           >
                             Reject
@@ -332,7 +345,7 @@ export default function Request(){
 
               <tbody className="divide-y divide-white/5">
                 {myRequests.map(req => (
-                  <tr key={req.id}>
+                  <tr key={req._id}>
                     <td className="px-4 py-3 capitalize">
                       {req.type.replace("_", " ")}
                     </td>
@@ -355,7 +368,7 @@ export default function Request(){
           <div className="block md:hidden p-4 space-y-4">
             {myRequests.map(req => (
               <div
-                key={req.id}
+                key={req._id}
                 className="bg-slate-800 rounded-lg p-4 space-y-2"
               >
                 <div className="text-sm capitalize">
