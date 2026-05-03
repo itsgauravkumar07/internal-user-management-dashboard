@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const { seedAuthUsers, seedAppUsers, seedRequests } = require("./seed");
+require("dotenv").config();
 
-mongoose.connect("mongodb+srv://gaurav1234:gaurav1234@internal-admin.wrkqsjn.mongodb.net/?appName=Internal-admin")
+mongoose.connect(process.env.MONGO_URL)
 .then(async () =>{
     console.log("MongoDB connected");
 

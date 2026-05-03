@@ -3,77 +3,14 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+require("dotenv").config();
 require("./db");
 
 const app = express();
 
-// const users = [
-//   {
-//     id: 1,
-//     email: "admin@test.com",
-//     password: "$2b$10$rtJtV5UFpY8b9a/LV9OTc.qkodxS45FiQnIF9pYxZn66Kouj5UPiu",
-//     role: "admin",
-//   },
-//   {
-//     id: 2,
-//     email: "member@test.com",
-//     password: "$2b$10$rtJtV5UFpY8b9a/LV9OTc.qkodxS45FiQnIF9pYxZn66Kouj5UPiu",
-//     role: "member",
-//   }
-// ];
-
 let AuthUser = require("./models/AuthUsers")
 let AppUser = require("./models/AppUser");
 let Request = require("./models/Request");
-
-
-// let appUsers = [
-//   {
-//     id: "u1",
-//     name: "Demo Admin",
-//     role: "admin",
-//     status: "Active"
-//   },
-//   {
-//     id: "u2",
-//     name: "Demo Member",
-//     role: "member",
-//     status: "Active"
-//   },
-//   {
-//     id: "u3",
-//     name: "Ravina",
-//     role: "member",
-//     status: "Active"
-//   },
-//   {
-//     id: "u4",
-//     name: "Prabash",
-//     role: "member",
-//     status: "Active"
-//   }
-// ];
-
-// let requests = [
-//    {
-//     id: "r1",
-//     userId: "u2",
-//     userName: "Demo Member",
-//     type: "role_change",
-//     requestedValue: "admin",
-//     status: "pending",
-//     createdAt: Date.now()
-//   },
-//   {
-//     id: "r2",
-//     userId: "u3",
-//     userName: "Ravina - Demo Member",
-//     type: "access_request",
-//     requestedValue: "inactive",
-//     status: "pending",
-//     createdAt: Date.now()
-//   }
-// ];
 
 app.use(cors());
 app.use(express.json());
@@ -85,7 +22,7 @@ const authMiddleware = (req, res, next) => {
   if (!token) return res.status(401).json({ message: "No token" });
 
   try {
-    const decoded = jwt.verify(token, "secret123");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();
   } catch {
@@ -119,7 +56,7 @@ app.post("/login", async (req, res) => {
 
     const token = jwt.sign(
         {userId: user._id, role: user.role },
-        "secret123",
+        process.env.JWT_SECRET,
         {expiresIn: "1h" }
     );
 
@@ -238,6 +175,7 @@ app.put("/requests/:id", authMiddleware, async (req, res) => {
   res.json({ request });
 });
 
-app.listen(4000, () => {
-    console.log("server was running in port 4000");
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+    console.log(`Server runnung on port ${PORT}`);
 });
