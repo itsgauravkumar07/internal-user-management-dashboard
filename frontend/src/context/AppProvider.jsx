@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect } from "react";
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
-
+import API_URL from "../config/api";
 
 
 const AppContext = createContext(null);
@@ -31,7 +31,7 @@ export default function AppProvider({ children }){
         return;
     }
 
-    fetch("http://localhost:4000/app-users", {
+    fetch(`${API_URL}/app-users`, {
         headers: {
         Authorization: `Bearer ${token}`
         }
@@ -46,7 +46,7 @@ export default function AppProvider({ children }){
     async function addUser(newUser) {
         const token = localStorage.getItem("token");
 
-        const res = await fetch("http://localhost:4000/app-users", {
+        const res = await fetch(`${API_URL}/app-users`, {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export default function AppProvider({ children }){
     async function updateUser(id, updatedData) {
         const token = localStorage.getItem("token");
 
-        const res = await fetch(`http://localhost:4000/app-users/${id}`, {
+        const res = await fetch(`${API_URL}/app-users/${id}`, {
             method: "PUT",
             headers: {
             "Content-Type": "application/json",
@@ -94,7 +94,7 @@ export default function AppProvider({ children }){
     async function deleteUser(id) {
         const token = localStorage.getItem("token");
 
-        const res = await fetch(`http://localhost:4000/app-users/${id}`, {
+        const res = await fetch(`${API_URL}/app-users/${id}`, {
             method: "DELETE",
             headers: {
             Authorization: `Bearer ${token}`
@@ -118,7 +118,7 @@ export default function AppProvider({ children }){
 
         if(!token) return;
 
-        fetch("http://localhost:4000/requests", {
+        fetch(`${API_URL}/requests`, {
             headers: {
             Authorization: `Bearer ${token}`
             }
@@ -138,7 +138,7 @@ export default function AppProvider({ children }){
     async function addRequest(newRequest) {
         const token = localStorage.getItem("token");
 
-        const res = await fetch("http://localhost:4000/requests", {
+        const res = await fetch(`${API_URL}/requests`, {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
@@ -157,7 +157,7 @@ export default function AppProvider({ children }){
     async function updateRequest(id, status) {
         const token = localStorage.getItem("token");
 
-        const res = await fetch(`http://localhost:4000/requests/${id}`, {
+        const res = await fetch(`${API_URL}/requests/${id}`, {
             method: "PUT",
             headers: {
             "Content-Type": "application/json",

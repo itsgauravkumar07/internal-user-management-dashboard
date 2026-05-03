@@ -12,4 +12,4 @@ mongoose.connect(process.env.MONGO_URL)
 
     console.log("✅ Seeding complete");
 })
-.catch(err => console.log(err));
+.catch(err => console.log("❌ MongoDB ERROR:", err));

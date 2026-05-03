@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { MdOutlineSecurity, MdOutlinePerson2 } from "react-icons/md";
 import { useEffect, useState } from "react";
+import API_URL from '../config/api';
 
 export default function RoleSelect(){
 
@@ -20,7 +21,7 @@ export default function RoleSelect(){
         try {
             setLoading(true);
 
-            const res = await fetch("http://localhost:4000/login", {
+            const res = await fetch(`${API_URL}/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
