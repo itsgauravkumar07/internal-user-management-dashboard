@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
-require("./db");
+const connectDB = require("./db");
 
 const app = express();
 
@@ -15,6 +15,10 @@ let Request = require("./models/Request");
 app.use(cors());
 app.use(express.json());
 
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
 
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];

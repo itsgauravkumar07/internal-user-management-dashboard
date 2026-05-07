@@ -1,15 +1,22 @@
 const mongoose = require("mongoose");
-const { seedAuthUsers, seedAppUsers, seedRequests } = require("./seed");
-require("dotenv").config();
 
-mongoose.connect(process.env.MONGO_URL)
-.then(async () =>{
-    console.log("MongoDB connected");
+async function connectDB() {
 
-    const users = await seedAppUsers();
-    await seedAuthUsers(users);
-    await seedRequests();
+  if (mongoose.connections[0].readyState) {
+    return;
+  }
 
-    console.log("✅ Seeding complete");
-})
-.catch(err => console.log("❌ MongoDB ERROR" , err));
+  try {
+    await mongoose.connect(process.env.MONGO_URL);
+
+    console.log("✅ MongoDB connected");
+
+  } catch (err) {
+
+    console.log("❌ MongoDB ERROR", err);
+
+    throw err;
+  }
+}
+
+module.exports = connectDB;
