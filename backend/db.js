@@ -6,8 +6,8 @@ mongoose.connect(process.env.MONGO_URL)
 .then(async () =>{
     console.log("MongoDB connected");
 
-    await seedAuthUsers();
-    await seedAppUsers();
+    const users = await seedAppUsers();
+    await seedAuthUsers(users);
     await seedRequests();
 
     console.log("✅ Seeding complete");

@@ -3,15 +3,25 @@ const AuthUser = require("./models/AuthUsers");
 const AppUser = require("./models/AppUser");
 const Request = require("./models/Request");
 
-async function seedAuthUsers(){
+async function seedAuthUsers(appUsers){
   const count = await AuthUser.countDocuments();
   if(count > 0) return;
 
   const hashed = await bcrypt.hash("123456", 10);
 
   await AuthUser.insertMany([
-    { email: "admin@test.com", password: hashed, role: "admin" },
-    { email: "member@test.com", password: hashed, role: "member" }
+    {
+      email: "admin@test.com",
+      password: hashed,
+      role: "admin",
+      appUserId: appUsers[0]._id
+    },
+    {
+      email: "member@test.com",
+      password: hashed,
+      role: "member",
+      appUserId: appUsers[1]._id
+    }
   ]);
 
   console.log("✅ Auth users seeded");
@@ -19,9 +29,11 @@ async function seedAuthUsers(){
 
 async function seedAppUsers(){
   const count = await AppUser.countDocuments();
-  if(count > 0) return;
+  if(count > 0) {
+    return await AppUser.find();
+  }
 
-  await AppUser.insertMany([
+  const users = await AppUser.insertMany([
     { name: "Demo Admin", role: "admin", status: "Active" },
     { name: "Demo Member", role: "member", status: "Active" },
     { name: "Ravi Kumar", role: "member", status: "Active" },
@@ -29,6 +41,8 @@ async function seedAppUsers(){
   ]);
 
   console.log("✅ AppUsers seeded");
+
+  return users;
 }
 
 async function seedRequests(){

@@ -14,6 +14,10 @@ const authUserSchema = new mongoose.Schema({
     type: String,
     enum: ["admin", "member"],
     default: "member"
+  },
+  appUserId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "AppUser"
   }
 });
 
