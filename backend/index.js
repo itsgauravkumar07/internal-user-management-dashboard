@@ -179,7 +179,4 @@ app.put("/requests/:id", authMiddleware, async (req, res) => {
   res.json({ request });
 });
 
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-    console.log(`Server runnung on port ${PORT}`);
-});
+module.exports = app;
