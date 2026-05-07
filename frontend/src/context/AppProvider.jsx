@@ -15,7 +15,7 @@ export default function AppProvider({ children }){
     function getAuthUser(){
         const token = localStorage.getItem("token");
         if(!token) return null;
-
+        
         try {
             return JSON.parse(atob(token.split(".")[1]));
         } catch {
@@ -127,7 +127,10 @@ export default function AppProvider({ children }){
             if (!res.ok) throw new Error("Failed to fetch requests");
             return res.json();
         })
-            .then(data => setRequests(data))
+            .then(data => { 
+                console.log(data);
+                setRequests(data)
+            })
             .catch(err => {
                 console.log(err);
                 setRequests([]); // fallback safe

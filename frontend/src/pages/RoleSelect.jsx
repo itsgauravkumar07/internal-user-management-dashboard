@@ -32,10 +32,15 @@ export default function RoleSelect(){
             })
         });
 
-        const data = await res.json();
+        let data;
+        try{
+            data = await res.json();
+        } catch {
+            throw new Error("Server error (not Json)");
+        }
 
         if (!res.ok) {
-        alert(data.message);
+        alert(data.message || "Login failed");
         return;
         }
 
@@ -44,6 +49,7 @@ export default function RoleSelect(){
 
         } catch (err) {
             console.log("Login error:", err);
+            alert("Something went wrong. Check backend");
         } finally {
             setLoading(false);
         }

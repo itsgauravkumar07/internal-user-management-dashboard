@@ -17,7 +17,7 @@ export default function Dashboard(){
 
     //Map AuthUser -> AppUser
     const currentAppUser = users.find(
-        (u) => String(u._id) === String(authUser?.userId)
+        (u) => String(u._id) === String(authUser?.appUserId)
     );
     
     //Admin summary card  logic

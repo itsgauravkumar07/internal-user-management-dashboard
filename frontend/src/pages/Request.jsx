@@ -8,15 +8,17 @@ export default function Request(){
     const [roleChange, setRoleChange] = useState('');
     const [accessReq, setAccessReq] = useState('');
     const [errors, setErrors] = useState({});
+
     const authUser = getAuthUser();
 
     const currentAppUser = users.find(
-      (u) => String(u._id) === String(authUser?.userId)
+      (u) => String(u._id) === String(authUser?.appUserId)
     );
 
     //Member submit
     async function handleSubmit(e){
       e.preventDefault();
+      console.log("This current user: ", currentAppUser);
 
       let error = {};
 
@@ -299,8 +301,8 @@ export default function Request(){
               onChange={e => setAccessReq(e.target.value)}
             >
               <option value="">Select option</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
             </select>
             <p className="text-red-500 text-xs mt-1">
               {errors.accessReq}
