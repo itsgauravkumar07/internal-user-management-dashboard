@@ -114,11 +114,14 @@ Database (MongoDB)
 backend/
 ├─ models/ # MongoDB schemas
 ├─ seed.js # Demo data seeding
+├─ seedrunner.js #Load the demo data in MongoDB
+├─ server.js #Use to locally run backend
 ├─ db.js # DB connection
 ├─ index.js # API routes
 
 frontend/
 ├─ components/
+├─ config/
 ├─ pages/
 ├─ context/
 ├─ layouts/
@@ -136,7 +139,7 @@ Use the role selection screen for demo login
 
 ## 🌐 Live Demo
 
-🔗 https://internal-user-management-dashboard.vercel.app/
+🔗 https://internal-user-management-dashboard-drab.vercel.app/
 
 📹 Demo Video  
 https://www.youtube.com/watch?v=JRiDMn_0jFk
