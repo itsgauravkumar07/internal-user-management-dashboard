@@ -39,34 +39,85 @@ app.get("/", (req, res) => {
 });
 
 //Login API
+// app.post("/login", async (req, res) => {
+//     const { email, password } = req.body;
+
+//      if(!email || !password){
+//         return res.status(400).json({ message: "Email and password both required" });
+//     }
+
+//     const user = await AuthUser.findOne({ email });
+
+//     if(!user){
+//         return res.status(401).json({ message: "User not find" });
+//     }
+
+//     const isMatch = await bcrypt.compare(password, user.password);
+
+//     if(!isMatch){
+//         return res.status(401).json({ message: "Invalid password" });
+//     }
+
+//     const token = jwt.sign(
+//         {userId: user._id, appUserId: user.appUserId, role: user.role },
+//         process.env.JWT_SECRET,
+//         {expiresIn: "1h" }
+//     );
+
+//     res.json({ token });
+    
+// })
+
+//for testing purpose
 app.post("/login", async (req, res) => {
+
+  try {
+
     const { email, password } = req.body;
 
-     if(!email || !password){
-        return res.status(400).json({ message: "Email and password both required" });
+    if(!email || !password){
+      return res.status(400).json({
+        message: "Email and password both required"
+      });
     }
 
     const user = await AuthUser.findOne({ email });
 
     if(!user){
-        return res.status(401).json({ message: "User not find" });
+      return res.status(401).json({
+        message: "User not found"
+      });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if(!isMatch){
-        return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({
+        message: "Invalid password"
+      });
     }
 
     const token = jwt.sign(
-        {userId: user._id, appUserId: user.appUserId, role: user.role },
-        process.env.JWT_SECRET,
-        {expiresIn: "1h" }
+      {
+        userId: user._id,
+        appUserId: user.appUserId,
+        role: user.role
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
     );
 
     res.json({ token });
-    
-})
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: err.message
+    });
+  }
+});
 
 //Add new app-user API
 app.post("/app-users", authMiddleware, async (req, res) => {
